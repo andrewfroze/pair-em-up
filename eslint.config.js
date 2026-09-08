@@ -13,7 +13,6 @@ export default [
         ...globals.browser,
       },
     },
+    ...js.configs.recommended,
   },
-
-  js.configs.recommended,
 ];
