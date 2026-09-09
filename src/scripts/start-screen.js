@@ -1,5 +1,6 @@
 import "../styles/start-screen.scss";
 import { openSettings } from "./components/settings";
+import { openScores } from "./components/scores";
 
 const gameMods = [
   {
@@ -140,7 +141,7 @@ function isGameSaved(gameMod) {
 }
 
 function openScoresModal() {
-  console.log("open scores");
+  openScores();
 }
 
 export { startScreenContainer };

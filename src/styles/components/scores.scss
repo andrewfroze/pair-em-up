@@ -1,0 +1,38 @@
+.scores-modal {
+  background-color: white;
+  border: 2px solid gray;
+  padding: 10px;
+  width: 50%;
+  min-width: 300px;
+}
+
+.scores-modal__title {
+  margin: 0;
+  text-align: center;
+}
+
+.scores-modal__top-results {
+  min-height: 200px;
+}
+
+.scores-modal__controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 10px;
+}
+
+.scores-modal__top-results__list {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.scores-modal__top-results__list__item {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  border: 1px solid gray;
+}
