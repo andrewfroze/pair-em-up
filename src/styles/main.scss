@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Alegreya&family=Audiowide&family=Cinzel&family=Creepster&family=DM+Sans&family=Montserrat&family=Orbitron&family=Pirata+One&family=UnifrakturCook&family=VT323&display=swap");
+
 * {
   box-sizing: border-box;
 }
@@ -5,6 +7,11 @@
 body {
   margin: 0;
   height: 100vh;
+  font-size: 24px;
+}
+
+button {
+  font-family: inherit;
 }
 
 .game-area {
