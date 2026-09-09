@@ -11,6 +11,7 @@ const themes = [
     background: "#ffffff",
     text: "#000000",
     border: "#808080",
+    active: "#4a90e2",
     font: "DM Sans",
   },
   {
@@ -18,6 +19,7 @@ const themes = [
     background: "#171717",
     text: "#f5f5f5",
     border: "#555555",
+    active: "#ffffff",
     font: "Montserrat",
   },
   {
@@ -25,6 +27,7 @@ const themes = [
     background: "#dce8d5",
     text: "#19351f",
     border: "#6b8f71",
+    active: "#3f7048",
     font: "Cinzel",
   },
   {
@@ -32,6 +35,7 @@ const themes = [
     background: "#210d0d",
     text: "#ff4d4d",
     border: "#8f1d1d",
+    active: "#ff0000",
     font: "UnifrakturCook",
   },
   {
@@ -39,6 +43,7 @@ const themes = [
     background: "#120d24",
     text: "#f5eaff",
     border: "#d946ef",
+    active: "#00ffff",
     font: "Orbitron",
   },
   {
@@ -46,6 +51,7 @@ const themes = [
     background: "#0b1026",
     text: "#e4e9ff",
     border: "#5969b8",
+    active: "#8c7cff",
     font: "Audiowide",
   },
   {
@@ -53,6 +59,7 @@ const themes = [
     background: "#1c0b10",
     text: "#f5d6d6",
     border: "#8f263d",
+    active: "#ff1744",
     font: "Creepster",
   },
   {
@@ -60,6 +67,7 @@ const themes = [
     background: "#102018",
     text: "#dcebdc",
     border: "#4f7959",
+    active: "#8bc34a",
     font: "Alegreya",
   },
   {
@@ -67,6 +75,7 @@ const themes = [
     background: "#21170d",
     text: "#f5d98a",
     border: "#9b7435",
+    active: "#ffd700",
     font: "Pirata One",
   },
   {
@@ -74,6 +83,7 @@ const themes = [
     background: "#071007",
     text: "#39ff5a",
     border: "#1c8c2e",
+    active: "#39ff14",
     font: "VT323",
   },
 ];
@@ -136,23 +146,30 @@ function createSoundSettingsPanel() {
 
   const soundSettingsTitle = document.createElement("label");
   soundSettingsTitle.textContent = "Sound";
-  soundSettingsContainer.className = "settings-modal__settings__sound__title";
+  soundSettingsTitle.className = "settings-modal__settings__sound__title";
   soundSettingsContainer.append(soundSettingsTitle);
 
   let lastVolume = settings["sound"];
 
+  const volumeControlContainer = document.createElement("div");
+  volumeControlContainer.className =
+    "settings-modal__settings__sound__volume-control";
+  soundSettingsContainer.append(volumeControlContainer);
+
   const volumeRange = document.createElement("input");
-  volumeRange.className = "settings-modal__settings__sound__range";
+  volumeRange.className =
+    "settings-modal__settings__sound__volume-control__range";
   volumeRange.type = "range";
   volumeRange.min = "0";
   volumeRange.max = "";
   volumeRange.value = lastVolume;
 
   const volumeLabel = document.createElement("label");
-  volumeLabel.className = "settings-modal__settings__sound__value";
+  volumeLabel.className =
+    "settings-modal__settings__sound__volume-control__value";
   volumeLabel.textContent = volumeRange.value;
 
-  soundSettingsContainer.append(volumeRange, volumeLabel);
+  volumeControlContainer.append(volumeRange, volumeLabel);
 
   volumeRange.addEventListener("input", () => {
     volumeLabel.textContent = volumeRange.value;
