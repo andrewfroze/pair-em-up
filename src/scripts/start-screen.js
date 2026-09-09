@@ -1,4 +1,5 @@
 import "../styles/start-screen.scss";
+import { openSettings } from "./components/settings";
 
 const gameMods = [
   {
@@ -16,17 +17,25 @@ let activeGameMod = gameMods[0].type;
 let activeGameModButton;
 
 const startScreenContainer = document.createElement("div");
+startScreenContainer.className = "start-screen";
 
 const gameTitle = document.createElement("h1");
+gameTitle.className = "start-screen__game-title";
 gameTitle.textContent = "Pair 'em Up";
 startScreenContainer.append(gameTitle);
 
+const gameMenu = document.createElement("section");
+gameMenu.className = "start-screen__game-menu";
+startScreenContainer.append(gameMenu);
+
 const gameModsButtonsContainer = document.createElement("section");
-startScreenContainer.append(gameModsButtonsContainer);
+gameModsButtonsContainer.className = "start-screen__game-menu__game-mods";
+gameMenu.append(gameModsButtonsContainer);
 
 for (const gameMod of gameMods) {
   const gameModButton = document.createElement("button");
-  gameModButton.className = "game-mod-button";
+  gameModButton.className =
+    "start-screen__game-menu__game-mods__game-mod-button";
   gameModButton.textContent = gameMod.type;
 
   if (gameMod.type === activeGameMod) {
@@ -50,9 +59,11 @@ for (const gameMod of gameMods) {
 }
 
 const startGameButtonsContainer = document.createElement("section");
-startScreenContainer.append(startGameButtonsContainer);
+startGameButtonsContainer.className = "start-screen__game-menu__start-game";
+gameMenu.append(startGameButtonsContainer);
 
 const newGameButton = document.createElement("button");
+newGameButton.className = "start-screen__game-menu__start-game__new-game";
 newGameButton.textContent = "New Game";
 newGameButton.addEventListener("click", () => {
   startNewGame(activeGameMod);
@@ -61,6 +72,7 @@ newGameButton.addEventListener("click", () => {
 startGameButtonsContainer.append(newGameButton);
 
 const continueGameButton = document.createElement("button");
+continueGameButton.className = "start-screen__game-menu__start-game__continue";
 continueGameButton.textContent = "Continue";
 
 continueGameButton.addEventListener("click", () => {
@@ -76,25 +88,29 @@ function updateStartGameButtons() {
 updateStartGameButtons();
 
 const settingsButton = document.createElement("button");
+settingsButton.className = "start-screen__game-menu__settings-button";
 settingsButton.textContent = "Settings";
-startScreenContainer.append(settingsButton);
+gameMenu.append(settingsButton);
 
 settingsButton.addEventListener("click", () => {
-  openSettingsModal();
+  openSettings();
 });
 
 const scoresButton = document.createElement("button");
+scoresButton.className = "start-screen__game-menu__scores-button";
 scoresButton.textContent = "Scores";
-startScreenContainer.append(scoresButton);
+gameMenu.append(scoresButton);
 
 scoresButton.addEventListener("click", () => {
   openScoresModal();
 });
 
 const authorCreditFooter = document.createElement("div");
+authorCreditFooter.className = "start-screen__footer";
 startScreenContainer.append(authorCreditFooter);
 
 const authorCreditLink = document.createElement("a");
+authorCreditLink.className = "start-screen__footer__credits-link";
 authorCreditLink.textContent = "andrewfroze";
 authorCreditLink.href = "https://github.com/andrewfroze";
 authorCreditLink.target = "_blank";
@@ -117,10 +133,6 @@ function loadGameState(gameMod) {
 function isGameSaved(gameMod) {
   console.log("checking game: " + gameMod);
   return false;
-}
-
-function openSettingsModal() {
-  console.log("open settings");
 }
 
 function openScoresModal() {
