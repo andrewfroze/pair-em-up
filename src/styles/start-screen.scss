@@ -9,10 +9,12 @@
 .start-screen__game-menu {
   display: flex;
   flex-direction: column;
-  gap: 2vh;
+  justify-content: space-around;
+  min-height: 300px;
   width: 100%;
   max-width: 300px;
-  padding: 20px;
+  padding: 10px;
+  border: 2px solid gray;
 }
 
 .start-screen__game-menu__game-mods {
@@ -37,6 +39,12 @@
 
 .start-screen__game-menu__game-mods__game-mod-button.focused {
   background-color: rgb(253, 163, 163);
+}
+
+.start-screen__game-menu__additional {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .start-screen__footer {

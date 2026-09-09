@@ -87,10 +87,14 @@ function updateStartGameButtons() {
 
 updateStartGameButtons();
 
+const additionButtonsContainer = document.createElement("div");
+additionButtonsContainer.className = "start-screen__game-menu__additional";
+gameMenu.append(additionButtonsContainer);
+
 const settingsButton = document.createElement("button");
 settingsButton.className = "start-screen__game-menu__settings-button";
 settingsButton.textContent = "Settings";
-gameMenu.append(settingsButton);
+additionButtonsContainer.append(settingsButton);
 
 settingsButton.addEventListener("click", () => {
   openSettings();
@@ -99,7 +103,7 @@ settingsButton.addEventListener("click", () => {
 const scoresButton = document.createElement("button");
 scoresButton.className = "start-screen__game-menu__scores-button";
 scoresButton.textContent = "Scores";
-gameMenu.append(scoresButton);
+additionButtonsContainer.append(scoresButton);
 
 scoresButton.addEventListener("click", () => {
   openScoresModal();
