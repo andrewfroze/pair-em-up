@@ -52,12 +52,3 @@
   padding: 10px;
   border-top: 1px solid var(--theme-border);
 }
-
-.start-screen__footer__credits-link {
-  text-decoration: none;
-  color: var(--theme-text);
-
-  &:hover {
-    color: var(--theme-active);
-  }
-}

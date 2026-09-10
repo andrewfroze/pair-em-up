@@ -30,7 +30,12 @@ button {
 }
 
 a {
-  color: var(--theme-link);
+  text-decoration: none;
+  color: var(--theme-text);
+
+  &:hover {
+    color: var(--theme-link);
+  }
 }
 
 .game-area {
