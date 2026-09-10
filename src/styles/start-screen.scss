@@ -20,6 +20,21 @@
 .start-screen__game-menu__game-mods {
   display: flex;
   justify-content: space-between;
+
+  &__game-mod-input {
+    display: none;
+  }
+
+  &__game-mod-label {
+    width: 30%;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  &__game-mod-input:checked + &__game-mod-label {
+    outline: 2px solid var(--theme-active);
+  }
 }
 
 .start-screen__game-menu__start-game {
@@ -31,10 +46,6 @@
 .start-screen__game-menu__start-game__continue,
 .start-screen__game-menu__start-game__new-game {
   width: 40%;
-}
-
-.start-screen__game-menu__game-mods__game-mod-button {
-  width: 30%;
 }
 
 .start-screen__game-menu__game-mods__game-mod-button.focused {

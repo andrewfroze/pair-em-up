@@ -46,24 +46,18 @@
     outline-offset: 3px;
   }
 
+  &__input {
+    display: none;
+  }
+
   &__option {
     cursor: pointer;
+    padding: 4px;
 
     &:hover {
       transform: scale(1.03);
     }
   }
-}
-
-.settings-modal__settings__theme__container__input {
-  display: none;
-}
-
-.settings-modal__settings__theme__container {
-}
-
-.settings-modal__settings__theme__container__option {
-  padding: 4px;
 }
 
 .settings-modal__controls {

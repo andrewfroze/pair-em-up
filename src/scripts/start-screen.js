@@ -15,7 +15,6 @@ const gameMods = [
 ];
 
 let activeGameMod = gameMods[0].type;
-let activeGameModButton;
 
 const startScreenContainer = document.createElement("div");
 startScreenContainer.className = "start-screen";
@@ -33,31 +32,27 @@ const gameModsButtonsContainer = document.createElement("section");
 gameModsButtonsContainer.className = "start-screen__game-menu__game-mods";
 gameMenu.append(gameModsButtonsContainer);
 
-for (const gameMod of gameMods) {
-  const gameModButton = document.createElement("button");
-  gameModButton.className =
-    "start-screen__game-menu__game-mods__game-mod-button";
-  gameModButton.textContent = gameMod.type;
+gameMods.forEach((gameMod, index) => {
+  const gameModInput = document.createElement("input");
+  gameModInput.type = "radio";
+  gameModInput.name = "game-mod";
+  gameModInput.value = gameMod.type;
+  gameModInput.id = `game-mod-${gameMod.type.toLowerCase().replaceAll(" ", "-")}`;
+  gameModInput.checked = index === 0;
+  gameModInput.className = "start-screen__game-menu__game-mods__game-mod-input";
 
-  if (gameMod.type === activeGameMod) {
-    gameModButton.classList.add("focused");
-    activeGameModButton = gameModButton;
-  }
+  const gameModLabel = document.createElement("label");
+  gameModLabel.className = "start-screen__game-menu__game-mods__game-mod-label";
+  gameModLabel.htmlFor = gameModInput.id;
+  gameModLabel.textContent = gameMod.type;
 
-  gameModButton.addEventListener("click", () => {
-    console.log(activeGameModButton);
+  gameModInput.addEventListener("input", () => {
     activeGameMod = gameMod.type;
-    gameModButton.classList.add("focused");
-    if (activeGameModButton) {
-      activeGameModButton.classList.remove("focused");
-    }
-    activeGameModButton = gameModButton;
-
     updateStartGameButtons();
   });
 
-  gameModsButtonsContainer.append(gameModButton);
-}
+  gameModsButtonsContainer.append(gameModInput, gameModLabel);
+});
 
 const startGameButtonsContainer = document.createElement("section");
 startGameButtonsContainer.className = "start-screen__game-menu__start-game";
