@@ -12,9 +12,9 @@
   justify-content: space-around;
   min-height: 300px;
   width: 100%;
-  max-width: 300px;
+  max-width: 500px;
   padding: 10px;
-  border: 2px solid gray;
+  border: 2px solid var(--theme-border);
 }
 
 .start-screen__game-menu__game-mods {
@@ -50,15 +50,14 @@
 .start-screen__footer {
   width: 100%;
   padding: 10px;
-  border-top: 1px solid gray;
-  background-color: rgb(224, 224, 224);
+  border-top: 1px solid var(--theme-border);
 }
 
 .start-screen__footer__credits-link {
   text-decoration: none;
-  color: black;
+  color: var(--theme-text);
 
   &:hover {
-    color: gray;
+    color: var(--theme-active);
   }
 }

@@ -1,6 +1,6 @@
 .scores-modal {
-  background-color: white;
-  border: 2px solid gray;
+  background-color: var(--theme-background);
+  border: 2px solid var(--theme-border);
   padding: 10px;
   width: 50%;
   min-width: 300px;
@@ -23,6 +23,7 @@
 }
 
 .scores-modal__top-results__list {
+  margin: 0;
   padding: 15px;
   display: flex;
   flex-direction: column;
@@ -34,5 +35,5 @@
   display: flex;
   justify-content: space-between;
   padding: 5px;
-  border: 1px solid gray;
+  border: 2px solid var(--theme-border);
 }

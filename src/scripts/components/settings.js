@@ -5,6 +5,9 @@ let defaultSettings = {
   theme: 1,
 };
 
+let soundLast;
+let themeLast;
+
 const themes = [
   {
     name: "Classic",
@@ -12,7 +15,11 @@ const themes = [
     text: "#000000",
     border: "#808080",
     active: "#4a90e2",
+    link: "#0066cc",
+    disabled: "#b5b5b5",
     font: "DM Sans",
+    fontSize: "24px",
+    buttonFontSize: "21px",
   },
   {
     name: "Dark",
@@ -20,7 +27,11 @@ const themes = [
     text: "#f5f5f5",
     border: "#555555",
     active: "#ffffff",
+    link: "#66b3ff",
+    disabled: "#4a4a4a",
     font: "Montserrat",
+    fontSize: "24px",
+    buttonFontSize: "21px",
   },
   {
     name: "Jedi",
@@ -28,7 +39,11 @@ const themes = [
     text: "#19351f",
     border: "#6b8f71",
     active: "#3f7048",
+    link: "#245f9e",
+    disabled: "#aeb9ae",
     font: "Cinzel",
+    fontSize: "22px",
+    buttonFontSize: "18px",
   },
   {
     name: "Sith",
@@ -36,7 +51,11 @@ const themes = [
     text: "#ff4d4d",
     border: "#8f1d1d",
     active: "#ff0000",
+    link: "#ff8080",
+    disabled: "#633838",
     font: "UnifrakturCook",
+    fontSize: "25px",
+    buttonFontSize: "20px",
   },
   {
     name: "Cyberpunk",
@@ -44,7 +63,11 @@ const themes = [
     text: "#f5eaff",
     border: "#d946ef",
     active: "#00ffff",
+    link: "#ff70e7",
+    disabled: "#51435a",
     font: "Orbitron",
+    fontSize: "21px",
+    buttonFontSize: "18px",
   },
   {
     name: "Galaxy",
@@ -52,7 +75,11 @@ const themes = [
     text: "#e4e9ff",
     border: "#5969b8",
     active: "#8c7cff",
+    link: "#8cb4ff",
+    disabled: "#414865",
     font: "Audiowide",
+    fontSize: "20px",
+    buttonFontSize: "18px",
   },
   {
     name: "Vampire",
@@ -60,7 +87,11 @@ const themes = [
     text: "#f5d6d6",
     border: "#8f263d",
     active: "#ff1744",
+    link: "#ff8098",
+    disabled: "#57333c",
     font: "Creepster",
+    fontSize: "27px",
+    buttonFontSize: "24px",
   },
   {
     name: "Forest",
@@ -68,7 +99,11 @@ const themes = [
     text: "#dcebdc",
     border: "#4f7959",
     active: "#8bc34a",
+    link: "#82b8ff",
+    disabled: "#3d5142",
     font: "Alegreya",
+    fontSize: "23px",
+    buttonFontSize: "20px",
   },
   {
     name: "Pirate",
@@ -76,7 +111,11 @@ const themes = [
     text: "#f5d98a",
     border: "#9b7435",
     active: "#ffd700",
+    link: "#6eb5ff",
+    disabled: "#5a4b30",
     font: "Pirata One",
+    fontSize: "24px",
+    buttonFontSize: "20px",
   },
   {
     name: "Retro Terminal",
@@ -84,11 +123,14 @@ const themes = [
     text: "#39ff5a",
     border: "#1c8c2e",
     active: "#39ff14",
+    link: "#39d9ff",
+    disabled: "#315a35",
     font: "VT323",
+    fontSize: "30px",
+    buttonFontSize: "24px",
   },
 ];
 
-let isSettingsChanged = false;
 let settings;
 
 function createSettingsModal() {
@@ -108,25 +150,30 @@ function createSettingsModal() {
   settingsContainer.className = "settings-modal__settings";
   settingsModal.append(settingsContainer);
 
-  loadSettings();
-  settingsContainer.append(createSoundSettingsPanel());
-  settingsContainer.append(createThemeSettingsPanel());
-
   const settingsControls = document.createElement("div");
   settingsControls.className = "settings-modal__controls";
   settingsModal.append(settingsControls);
 
   const saveButton = document.createElement("button");
   saveButton.textContent = "Save";
-  saveButton.disabled = !isSettingsChanged;
+  saveButton.disabled = true;
   saveButton.className = "settings-modal__controls__save";
   settingsControls.append(saveButton);
 
   saveButton.addEventListener("click", () => {
-    console.log("save settings");
-    // todo add saving of settings
+    if (soundLast !== undefined) {
+      settings.sound = soundLast;
+    }
+    if (themeLast !== undefined) {
+      settings.theme = themeLast;
+    }
+    saveSettings();
+    applyTheme();
     closeSettings();
   });
+
+  settingsContainer.append(createSoundSettingsPanel(saveButton));
+  settingsContainer.append(createThemeSettingsPanel(saveButton));
 
   const cancelButton = document.createElement("button");
   cancelButton.textContent = "Cancel";
@@ -140,7 +187,7 @@ function createSettingsModal() {
   return overlay;
 }
 
-function createSoundSettingsPanel() {
+function createSoundSettingsPanel(saveButton) {
   const soundSettingsContainer = document.createElement("div");
   soundSettingsContainer.className = "settings-modal__settings__sound";
 
@@ -173,12 +220,14 @@ function createSoundSettingsPanel() {
 
   volumeRange.addEventListener("input", () => {
     volumeLabel.textContent = volumeRange.value;
+    soundLast = volumeRange.value;
+    saveButton.disabled = false;
   });
 
   return soundSettingsContainer;
 }
 
-function createThemeSettingsPanel() {
+function createThemeSettingsPanel(saveButton) {
   const themeSettingsContainer = document.createElement("div");
   themeSettingsContainer.className = "settings-modal__settings__theme";
 
@@ -191,18 +240,37 @@ function createThemeSettingsPanel() {
   themesContainer.className = "settings-modal__settings__theme__container";
   themeSettingsContainer.append(themesContainer);
 
-  for (const theme of themes) {
+  themes.forEach((theme, index) => {
+    const themeInput = document.createElement("input");
+    themeInput.className = "settings-modal__settings__theme__container__input";
+    themeInput.type = "radio";
+    themeInput.name = "theme";
+    themeInput.value = theme.name;
+    themeInput.id = `theme-${theme.name.toLowerCase().replaceAll(" ", "-")}`;
+    if (index === settings.theme) {
+      themeInput.checked = true;
+    }
+
     const themeOption = document.createElement("label");
+    themeOption.htmlFor = themeInput.id;
     themeOption.textContent = theme.name;
     themeOption.className =
       "settings-modal__settings__theme__container__option";
+
     themeOption.style.backgroundColor = theme.background;
     themeOption.style.color = theme.text;
     themeOption.style.fontFamily = `"${theme.font}", sans-serif`;
-    themeOption.style.border = `2px solid ${theme.border}`;
+    themeOption.style.fontSize = theme.fontSize;
+    themeOption.style.border = `3px solid ${theme.border}`;
+    themeOption.style.setProperty("--theme-active", theme.active);
 
-    themesContainer.append(themeOption);
-  }
+    themesContainer.append(themeInput, themeOption);
+
+    themeInput.addEventListener("input", () => {
+      saveButton.disabled = false;
+      themeLast = index;
+    });
+  });
 
   return themeSettingsContainer;
 }
@@ -214,6 +282,43 @@ function loadSettings() {
   } else {
     saveDefaultSettings();
   }
+}
+
+function applyTheme() {
+  if (!settings.theme || settings.theme >= themes.length) {
+    settings.theme = 0;
+    saveSettings();
+  }
+  const theme = themes[settings.theme];
+
+  document.documentElement.style.setProperty(
+    "--theme-background",
+    theme.background,
+  );
+  document.documentElement.style.setProperty("--theme-text", theme.text);
+  document.documentElement.style.setProperty("--theme-border", theme.border);
+  document.documentElement.style.setProperty("--theme-active", theme.active);
+  document.documentElement.style.setProperty(
+    "--theme-font",
+    `"${theme.font}", sans-serif`,
+  );
+  document.documentElement.style.setProperty(
+    "--theme-font-size",
+    theme.fontSize,
+  );
+  document.documentElement.style.setProperty(
+    "--theme-button-font-size",
+    theme.buttonFontSize,
+  );
+  document.documentElement.style.setProperty("--theme-link", theme.link);
+  document.documentElement.style.setProperty(
+    "--theme-disabled",
+    theme.disabled,
+  );
+}
+
+function saveSettings() {
+  localStorage.setItem("settings", JSON.stringify(settings));
 }
 
 function saveDefaultSettings() {
@@ -235,4 +340,4 @@ function closeSettings() {
   }
 }
 
-export { openSettings, closeSettings };
+export { openSettings, closeSettings, loadSettings, applyTheme };

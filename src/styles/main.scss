@@ -7,11 +7,30 @@
 body {
   margin: 0;
   height: 100vh;
-  font-size: 24px;
+  font-size: var(--theme-font-size);
+  background-color: var(--theme-background);
+  color: var(--theme-text);
+  font-family: var(--theme-font);
 }
 
 button {
-  font-family: inherit;
+  color: var(--theme-text);
+  background-color: var(--theme-background);
+  border: 2px solid var(--theme-border);
+  font-family: var(--theme-font);
+  font-size: var(--theme-button-font-size);
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &:disabled {
+    color: var(--theme-disabled);
+    border-color: var(--theme-disabled);
+    cursor: not-allowed;
+  }
+}
+
+a {
+  color: var(--theme-link);
 }
 
 .game-area {
