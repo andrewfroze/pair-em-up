@@ -25,6 +25,13 @@
         align-items: center;
         border: 2px solid var(--theme-border);
         font-size: clamp(0.5em, 5cqw, 1.5em);
+        transition: all 0.3s ease-in-out;
+
+        @media (hover: hover) {
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
       }
     }
   }
