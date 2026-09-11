@@ -15,6 +15,7 @@ const gameMods = [
 ];
 
 let activeGameMod = gameMods[0].type;
+let activeGameModLabel;
 
 function createStartScreen({ onNewGame, onContinue }) {
   const startScreenContainer = document.createElement("div");
@@ -33,13 +34,16 @@ function createStartScreen({ onNewGame, onContinue }) {
   gameModsButtonsContainer.className = "start-screen__game-menu__game-mods";
   gameMenu.append(gameModsButtonsContainer);
 
-  gameMods.forEach((gameMod, index) => {
+  const gameModIndicator = document.createElement("div");
+  gameModIndicator.className = "start-screen__game-menu__game-mods__indicator";
+  gameModsButtonsContainer.append(gameModIndicator);
+
+  gameMods.forEach((gameMod) => {
     const gameModInput = document.createElement("input");
     gameModInput.type = "radio";
     gameModInput.name = "game-mod";
     gameModInput.value = gameMod.type;
     gameModInput.id = `game-mod-${gameMod.type.toLowerCase().replaceAll(" ", "-")}`;
-    gameModInput.checked = index === 0;
     gameModInput.className =
       "start-screen__game-menu__game-mods__game-mod-input";
 
@@ -49,13 +53,27 @@ function createStartScreen({ onNewGame, onContinue }) {
     gameModLabel.htmlFor = gameModInput.id;
     gameModLabel.textContent = gameMod.type;
 
+    if (gameMod.type === activeGameMod) {
+      gameModInput.checked = true;
+      activeGameModLabel = gameModLabel;
+    }
+
     gameModInput.addEventListener("input", () => {
       activeGameMod = gameMod.type;
+      activeGameModLabel = gameModLabel;
       updateStartGameButtons();
+      updateGameModIndicator();
     });
 
     gameModsButtonsContainer.append(gameModInput, gameModLabel);
   });
+
+  function updateGameModIndicator() {
+    gameModIndicator.style.width = `${activeGameModLabel.offsetWidth}px`;
+    gameModIndicator.style.transform = `translateX(${activeGameModLabel.offsetLeft}px)`;
+  }
+
+  startScreenContainer.afterRenderAnimation = updateGameModIndicator;
 
   const startGameButtonsContainer = document.createElement("section");
   startGameButtonsContainer.className = "start-screen__game-menu__start-game";

@@ -22,6 +22,12 @@ function showStartScreen() {
 
 function renderScreen(screen) {
   gameArea.replaceChildren(screen);
+
+  if (screen.afterRenderAnimation) {
+    requestAnimationFrame(() => {
+      screen.afterRenderAnimation();
+    });
+  }
 }
 
 function startNewGame(mode) {
