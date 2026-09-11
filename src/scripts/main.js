@@ -1,6 +1,7 @@
 import "../styles/main.scss";
 import { applyTheme, loadSettings } from "./components/settings";
-import { startScreenContainer } from "./start-screen";
+import { createStartScreen } from "./screens/start-screen";
+import { newGameScreen, continueGameScreen } from "./screens/game-screen";
 
 loadSettings();
 applyTheme();
@@ -8,6 +9,27 @@ const gameArea = document.createElement("div");
 gameArea.className = "game-area";
 document.body.append(gameArea);
 
-gameArea.append(startScreenContainer);
+showStartScreen();
+
+function showStartScreen() {
+  renderScreen(
+    createStartScreen({
+      onNewGame: (mode) => startNewGame(mode),
+      onContinue: (mode) => continueGame(mode),
+    }),
+  );
+}
+
+function renderScreen(screen) {
+  gameArea.replaceChildren(screen);
+}
+
+function startNewGame(mode) {
+  renderScreen(newGameScreen(mode, () => showStartScreen()));
+}
+
+function continueGame(mode) {
+  renderScreen(continueGameScreen(mode, () => showStartScreen()));
+}
 
 export { gameArea };
