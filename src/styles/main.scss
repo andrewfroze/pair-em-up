@@ -21,11 +21,18 @@ button {
   font-size: var(--theme-button-font-size);
   text-transform: uppercase;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 
   &:disabled {
     color: var(--theme-disabled);
     border-color: var(--theme-disabled);
     cursor: not-allowed;
+  }
+
+  @media (hover: hover) {
+    &:enabled:hover {
+      transform: scale(1.03);
+    }
   }
 }
 
