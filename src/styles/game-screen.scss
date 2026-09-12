@@ -10,6 +10,13 @@
     width: 100%;
     gap: 10px;
     justify-content: center;
+    flex-wrap: wrap;
+
+    &__button {
+      white-space: nowrap;
+      border: 0.3vw solid var(--theme-border);
+      font-size: clamp(0.3em, 4cqw, 1.5em);
+    }
   }
 
   &__game-board-container {

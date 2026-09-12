@@ -14,21 +14,19 @@ function newGameScreen(mode) {
   gameBoardContainer.className = "game-screen__game-board-container";
 
   assistButtonsContainer.append(
-    createButton("Hints", "game-screen__assist-buttons__hints", () =>
+    createButton("Hints", "game-screen__assist-buttons__button", () =>
       getHint(game),
     ),
-    createButton("Revert", "game-screen__assist-buttons__revert", () =>
+    createButton("Revert", "game-screen__assist-buttons__button", () =>
       revert(game),
     ),
-    createButton(
-      "Add Numbers",
-      "game-screen__assist-buttons__add-numbers",
-      () => addNumbers(game),
+    createButton("Add Numbers", "game-screen__assist-buttons__button", () =>
+      addNumbers(game),
     ),
-    createButton("Shuffle", "game-screen__assist-buttons__shuffle", () =>
+    createButton("Shuffle", "game-screen__assist-buttons__button", () =>
       shuffle(game, gameBoardContainer),
     ),
-    createButton("Eraser", "game-screen__assist-buttons__eraser", () =>
+    createButton("Eraser", "game-screen__assist-buttons__button", () =>
       eraser(game),
     ),
   );
@@ -48,7 +46,7 @@ function continueGameScreen(mode) {
 
 function createButton(label, buttonClass, onClick = () => console.log(label)) {
   const button = document.createElement("button");
-  button.textContent = buttonClass;
+  button.className = buttonClass;
   button.textContent = label;
   button.addEventListener("click", () => onClick());
   return button;
