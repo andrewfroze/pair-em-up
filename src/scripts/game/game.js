@@ -8,11 +8,23 @@ class Game {
   constructor(mode, isNew = true) {
     this.mode = mode;
     this.board = [];
+    this.isRevertAvailable = false;
+    this.addNumbersAvailable = 10;
+    this.shufflesAvailable = 5;
+    this.eraserAvailable = 5;
     if (isNew) {
       this.createBoard(mode);
     } else {
       this.loadSavedState(mode);
     }
+    this.hints = [];
+    this.hintsAvailable = this.collectHints();
+    this.maxHintsToShow = 5;
+  }
+
+  collectHints() {
+    // todo fill this.hints
+    return this.hints.length;
   }
 
   loadSavedState(mode) {
@@ -64,7 +76,12 @@ class Game {
   }
 
   shuffle() {
-    this.board = shuffleSequence(this.board);
+    if (this.shufflesAvailable) {
+      this.board = shuffleSequence(this.board);
+      this.shufflesAvailable -= 1;
+      return true;
+    }
+    return false;
   }
 }
 

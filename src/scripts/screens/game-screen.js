@@ -1,6 +1,9 @@
 import "../../styles/game-screen.scss";
 import { Game } from "../game/game";
 
+let board;
+let assistButtons;
+
 function newGameScreen(mode) {
   const game = new Game(mode);
   const gameScreen = document.createElement("div");
@@ -9,30 +12,14 @@ function newGameScreen(mode) {
   const assistButtonsContainer = document.createElement("div");
   assistButtonsContainer.className = "game-screen__assist-buttons";
   gameScreen.append(assistButtonsContainer);
+  assistButtons = assistButtonsContainer;
 
   const gameBoardContainer = document.createElement("div");
   gameBoardContainer.className = "game-screen__game-board-container";
+  board = gameBoardContainer;
 
-  assistButtonsContainer.append(
-    createButton("Hints", "game-screen__assist-buttons__button", () =>
-      getHint(game),
-    ),
-    createButton("Revert", "game-screen__assist-buttons__button", () =>
-      revert(game),
-    ),
-    createButton("Add Numbers", "game-screen__assist-buttons__button", () =>
-      addNumbers(game),
-    ),
-    createButton("Shuffle", "game-screen__assist-buttons__button", () =>
-      shuffle(game, gameBoardContainer),
-    ),
-    createButton("Eraser", "game-screen__assist-buttons__button", () =>
-      eraser(game),
-    ),
-  );
-
+  renderAssistButtons(game);
   gameScreen.append(gameBoardContainer);
-
   gameBoardContainer.append(renderBoard(game.board));
   return gameScreen;
 }
@@ -44,10 +31,46 @@ function continueGameScreen(mode) {
   return gameScreen;
 }
 
-function createButton(label, buttonClass, onClick = () => console.log(label)) {
+function renderAssistButtons(game) {
+  assistButtons.replaceChildren(
+    createAssistButton(
+      `Hints (${game.hintsAvailable})`,
+      "game-screen__assist-buttons__button",
+      () => getHint(game),
+      game.hintsAvailable,
+    ),
+    createAssistButton(
+      "Revert",
+      "game-screen__assist-buttons__button",
+      () => revert(game),
+      game.isRevertAvailable,
+    ),
+    createAssistButton(
+      `Add Numbers (${game.addNumbersAvailable})`,
+      "game-screen__assist-buttons__button",
+      () => addNumbers(game),
+      game.addNumbersAvailable,
+    ),
+    createAssistButton(
+      `Shuffle (${game.shufflesAvailable})`,
+      "game-screen__assist-buttons__button",
+      () => shuffle(game, board),
+      game.shufflesAvailable,
+    ),
+    createAssistButton(
+      `Eraser (${game.eraserAvailable})`,
+      "game-screen__assist-buttons__button",
+      () => eraser(game),
+      game.eraserAvailable,
+    ),
+  );
+}
+
+function createAssistButton(label, buttonClass, onClick, enabled) {
   const button = document.createElement("button");
   button.className = buttonClass;
   button.textContent = label;
+  button.disabled = !enabled;
   button.addEventListener("click", () => onClick());
   return button;
 }
@@ -70,6 +93,10 @@ function renderBoard(boardArray) {
   return gameBoard;
 }
 
+function rerenderBoard(game) {
+  board.replaceChildren(renderBoard(game.board));
+}
+
 function addNumbers(board) {
   board.addNumbers();
 }
@@ -82,9 +109,10 @@ function revert(board) {
   board.revert();
 }
 
-function shuffle(game, boardElement) {
+function shuffle(game) {
   game.shuffle();
-  boardElement.replaceChildren(renderBoard(game.board));
+  rerenderBoard(game);
+  renderAssistButtons(game);
 }
 
 function eraser(board) {
