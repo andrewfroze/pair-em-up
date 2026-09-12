@@ -5,31 +5,45 @@
   flex-direction: column;
   align-items: center;
 
-  &__game-board {
+  &__assist-buttons {
+    display: flex;
     width: 100%;
-    max-width: 1000px;
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    gap: 10px;
+    justify-content: center;
+  }
 
-    &__item {
-      aspect-ratio: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  &__game-board-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-      &__label {
+    &__game-board {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+
+      &__item {
         aspect-ratio: 1;
-        width: 80%;
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 2px solid var(--theme-border);
-        font-size: clamp(0.5em, 5cqw, 1.5em);
-        transition: all 0.3s ease-in-out;
 
-        @media (hover: hover) {
-          &:hover {
-            transform: scale(1.1);
+        &__label {
+          aspect-ratio: 1;
+          width: 80%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 0.3vw solid var(--theme-border);
+          font-size: clamp(0.5em, 5cqw, 1.5em);
+          transition: all 0.3s ease-in-out;
+
+          @media (hover: hover) {
+            &:hover {
+              transform: scale(1.1);
+            }
           }
         }
       }

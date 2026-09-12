@@ -1,16 +1,18 @@
+import {
+  getRandomNumber,
+  getShuffledSequence,
+  shuffleSequence,
+} from "./random";
+
 class Game {
   constructor(mode, isNew = true) {
     this.mode = mode;
-    this.createNewField();
+    this.board = [];
     if (isNew) {
-      this.fillCells(mode);
+      this.createBoard(mode);
     } else {
       this.loadSavedState(mode);
     }
-  }
-
-  createNewField() {
-    this.board = new Array(27);
   }
 
   loadSavedState(mode) {
@@ -22,23 +24,47 @@ class Game {
     throw new Error("There are no saved states");
   }
 
-  fillCells(mode) {
+  createBoard(mode) {
     switch (mode) {
       case "classic":
-        return this.createClassicField();
+        this.createClassicSequence();
+        break;
       case "random":
-        return this.createRandomGame();
+        this.createRandomSequence();
+        break;
       case "chaotic":
-        return this.createChaoticGame();
+        this.createChaoticSequence();
+        break;
     }
-    throw new Error("Unknown game mode selected");
+    this.placeSequenceToBoard();
   }
 
-  createClassicField() {
-    for (let i = 0; i < this.board.length; i += 1) {
-      this.board[i] = i + 1;
+  createClassicSequence() {
+    this.sequence = Array.from({ length: 19 }, (_, index) => index + 1);
+  }
+
+  createRandomSequence() {
+    this.sequence = getShuffledSequence();
+  }
+
+  createChaoticSequence() {
+    this.sequence = Array.from({ length: 27 }, () => getRandomNumber());
+  }
+
+  placeSequenceToBoard() {
+    this.board = [];
+    let lastFilled = 0;
+    for (const item of this.sequence) {
+      if (item % 10) {
+        for (const number of item.toString().split("")) {
+          this.board[lastFilled++] = +number;
+        }
+      }
     }
-    return this.board;
+  }
+
+  shuffle() {
+    this.board = shuffleSequence(this.board);
   }
 }
 
