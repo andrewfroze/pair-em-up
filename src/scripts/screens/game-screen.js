@@ -11,7 +11,6 @@ function newGameScreen(mode) {
 
   const assistButtonsContainer = document.createElement("div");
   assistButtonsContainer.className = "game-screen__assist-buttons";
-  gameScreen.append(assistButtonsContainer);
   assistButtons = assistButtonsContainer;
 
   const gameBoardContainer = document.createElement("div");
@@ -21,6 +20,8 @@ function newGameScreen(mode) {
   renderAssistButtons(game);
   gameScreen.append(gameBoardContainer);
   gameBoardContainer.append(renderBoard(game.board));
+  gameScreen.append(assistButtonsContainer);
+
   return gameScreen;
 }
 
@@ -49,7 +50,7 @@ function renderAssistButtons(game) {
       `Add Numbers (${game.addNumbersAvailable})`,
       "game-screen__assist-buttons__button",
       () => addNumbers(game),
-      game.addNumbersAvailable,
+      game.canNumbersBeAdded(),
     ),
     createAssistButton(
       `Shuffle (${game.shufflesAvailable})`,
@@ -97,8 +98,11 @@ function rerenderBoard(game) {
   board.replaceChildren(renderBoard(game.board));
 }
 
-function addNumbers(board) {
-  board.addNumbers();
+function addNumbers(game) {
+  if (game.addNumbers()) {
+    rerenderBoard(game);
+    renderAssistButtons(game);
+  }
 }
 
 function getHint(board) {
@@ -110,9 +114,10 @@ function revert(board) {
 }
 
 function shuffle(game) {
-  game.shuffle();
-  rerenderBoard(game);
-  renderAssistButtons(game);
+  if (game.shuffle()) {
+    rerenderBoard(game);
+    renderAssistButtons(game);
+  }
 }
 
 function eraser(board) {

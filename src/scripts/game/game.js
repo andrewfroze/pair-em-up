@@ -10,6 +10,7 @@ class Game {
     this.board = [];
     this.isRevertAvailable = false;
     this.addNumbersAvailable = 10;
+    this.numbersLimit = 450;
     this.shufflesAvailable = 5;
     this.eraserAvailable = 5;
     if (isNew) {
@@ -82,6 +83,45 @@ class Game {
       return true;
     }
     return false;
+  }
+
+  canNumbersBeAdded() {
+    return this.addNumbersAvailable && this.board.length < this.numbersLimit;
+  }
+
+  addNumbers() {
+    if (this.canNumbersBeAdded()) {
+      switch (this.mode) {
+        case "classic":
+          this.addNumbersClassic();
+          break;
+        case "random":
+          this.addNumbersRandom();
+          break;
+        case "chaotic":
+          this.addNumbersChaotic();
+          break;
+      }
+
+      this.addNumbersAvailable -= 1;
+      this.limitNumbers();
+      return true;
+    }
+    return false;
+  }
+
+  addNumbersClassic() {
+    this.board.push(...this.getNumbersLeft());
+  }
+
+  limitNumbers() {
+    if (this.board.length > this.numbersLimit) {
+      this.board = this.board.slice(0, this.numbersLimit);
+    }
+  }
+
+  getNumbersLeft() {
+    return this.board.filter((val) => val);
   }
 }
 
