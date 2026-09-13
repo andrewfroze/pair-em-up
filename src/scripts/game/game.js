@@ -114,6 +114,10 @@ class Game {
     this.board.push(...this.getNumbersLeft());
   }
 
+  addNumbersRandom() {
+    this.board.push(...shuffleSequence(this.getNumbersLeft()));
+  }
+
   limitNumbers() {
     if (this.board.length > this.numbersLimit) {
       this.board = this.board.slice(0, this.numbersLimit);
