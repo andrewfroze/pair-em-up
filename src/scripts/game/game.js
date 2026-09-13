@@ -118,6 +118,13 @@ class Game {
     this.board.push(...shuffleSequence(this.getNumbersLeft()));
   }
 
+  addNumbersChaotic() {
+    const numbersLeft = this.getNumbersLeft().length;
+    for (let i = 0; i < numbersLeft; i += 1) {
+      this.board.push(getRandomNumber());
+    }
+  }
+
   limitNumbers() {
     if (this.board.length > this.numbersLimit) {
       this.board = this.board.slice(0, this.numbersLimit);
