@@ -38,6 +38,8 @@ function createStartScreen({ onNewGame, onContinue }) {
   gameModIndicator.className = "start-screen__game-menu__game-mods__indicator";
   gameModsButtonsContainer.append(gameModIndicator);
 
+  const labels = [];
+
   gameMods.forEach((gameMod) => {
     const gameModInput = document.createElement("input");
     gameModInput.type = "radio";
@@ -53,6 +55,8 @@ function createStartScreen({ onNewGame, onContinue }) {
     gameModLabel.htmlFor = gameModInput.id;
     gameModLabel.textContent = gameMod.type;
 
+    labels.push(gameModLabel);
+
     if (gameMod.type === activeGameMod) {
       gameModInput.checked = true;
       activeGameModLabel = gameModLabel;
@@ -66,6 +70,14 @@ function createStartScreen({ onNewGame, onContinue }) {
     });
 
     gameModsButtonsContainer.append(gameModInput, gameModLabel);
+  });
+
+  const labelsResizeObserver = new ResizeObserver(() => {
+    updateGameModIndicator();
+  });
+
+  labels.forEach((label) => {
+    labelsResizeObserver.observe(label);
   });
 
   function updateGameModIndicator() {
