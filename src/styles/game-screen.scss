@@ -7,11 +7,10 @@
   overflow: hidden;
 
   &.eraser-mode {
-    cursor: var(--eraser-cursor), auto;
+    cursor: var(--eraser-cursor), auto !important;
 
-    .game-screen__assist-buttons__button:not(.active) {
-      pointer-events: none;
-      opacity: 0.5;
+    .game-screen__game-board-container__game-board__item__label {
+      cursor: var(--eraser-cursor), auto !important;
     }
   }
 

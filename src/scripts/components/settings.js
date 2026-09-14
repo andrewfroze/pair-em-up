@@ -1,4 +1,14 @@
 import "../../styles/components/settings.scss";
+import eraserClassic from "../../images/eraser-classic.svg";
+import eraserDark from "../../images/eraser-dark.svg";
+import eraserJedi from "../../images/eraser-jedi.svg";
+import eraserSith from "../../images/eraser-sith.svg";
+import eraserCyberpunk from "../../images/eraser-cyberpunk.svg";
+import eraserGalaxy from "../../images/eraser-galaxy.svg";
+import eraserVampire from "../../images/eraser-vampire.svg";
+import eraserForest from "../../images/eraser-forest.svg";
+import eraserPirate from "../../images/eraser-pirate.svg";
+import eraserRetroTerminal from "../../images/eraser-retro-terminal.svg";
 
 let defaultSettings = {
   sound: 50,
@@ -23,7 +33,7 @@ const themes = [
     font: "DM Sans",
     fontSize: "24px",
     buttonFontSize: "21px",
-    eraserCursor: "eraser-classic.svg",
+    eraserCursor: eraserClassic,
   },
   {
     name: "Dark",
@@ -39,7 +49,7 @@ const themes = [
     font: "Montserrat",
     fontSize: "24px",
     buttonFontSize: "21px",
-    eraserCursor: "eraser-dark.svg",
+    eraserCursor: eraserDark,
   },
   {
     name: "Jedi",
@@ -55,7 +65,7 @@ const themes = [
     font: "Cinzel",
     fontSize: "22px",
     buttonFontSize: "18px",
-    eraserCursor: "eraser-jedi.svg",
+    eraserCursor: eraserJedi,
   },
   {
     name: "Sith",
@@ -71,7 +81,7 @@ const themes = [
     font: "UnifrakturCook",
     fontSize: "25px",
     buttonFontSize: "20px",
-    eraserCursor: "eraser-sith.svg",
+    eraserCursor: eraserSith,
   },
   {
     name: "Cyberpunk",
@@ -87,7 +97,7 @@ const themes = [
     font: "Orbitron",
     fontSize: "21px",
     buttonFontSize: "18px",
-    eraserCursor: "eraser-cyberpunk.svg",
+    eraserCursor: eraserCyberpunk,
   },
   {
     name: "Galaxy",
@@ -103,7 +113,7 @@ const themes = [
     font: "Audiowide",
     fontSize: "20px",
     buttonFontSize: "18px",
-    eraserCursor: "eraser-galaxy.svg",
+    eraserCursor: eraserGalaxy,
   },
   {
     name: "Vampire",
@@ -119,7 +129,7 @@ const themes = [
     font: "Creepster",
     fontSize: "27px",
     buttonFontSize: "24px",
-    eraserCursor: "eraser-vampire.svg",
+    eraserCursor: eraserVampire,
   },
   {
     name: "Forest",
@@ -135,7 +145,7 @@ const themes = [
     font: "Alegreya",
     fontSize: "23px",
     buttonFontSize: "20px",
-    eraserCursor: "eraser-forest.svg",
+    eraserCursor: eraserForest,
   },
   {
     name: "Pirate",
@@ -151,7 +161,7 @@ const themes = [
     font: "Pirata One",
     fontSize: "24px",
     buttonFontSize: "20px",
-    eraserCursor: "eraser-pirate.svg",
+    eraserCursor: eraserPirate,
   },
   {
     name: "Retro Terminal",
@@ -167,7 +177,7 @@ const themes = [
     font: "VT323",
     fontSize: "30px",
     buttonFontSize: "24px",
-    eraserCursor: "eraser-retro-terminal.svg",
+    eraserCursor: eraserRetroTerminal,
   },
 ];
 
