@@ -28,6 +28,16 @@
         width: 30%;
         text-align: center;
         text-transform: uppercase;
+        padding: clamp(
+          calc(var(--theme-font-size) * 0.1),
+          1cqw,
+          calc(var(--theme-font-size) * 0.3)
+        );
+        font-size: clamp(
+          calc(var(--theme-font-size) * 0.7),
+          5cqw,
+          var(--theme-font-size)
+        );
         cursor: pointer;
       }
 
