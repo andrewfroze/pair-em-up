@@ -7,9 +7,10 @@ let statisticsPanel;
 let timer;
 let score;
 let timerInterval;
+let game;
 
 function newGameScreen(mode) {
-  const game = new Game(mode);
+  game = new Game(mode);
   const gameScreen = document.createElement("div");
   gameScreen.className = "game-screen";
 
@@ -21,19 +22,19 @@ function newGameScreen(mode) {
   gameBoardContainer.className = "game-screen__game-board-container";
   board = gameBoardContainer;
 
-  renderAssistButtons(game);
+  renderAssistButtons();
   gameScreen.append(gameBoardContainer);
 
-  statisticsPanel = renderStatisticsPanel(game);
+  statisticsPanel = renderStatisticsPanel();
   gameBoardContainer.append(statisticsPanel);
 
-  gameBoardContainer.append(renderBoard(game));
+  gameBoardContainer.append(renderBoard());
   gameScreen.append(assistButtonsContainer);
 
   return gameScreen;
 }
 
-function renderStatisticsPanel(game) {
+function renderStatisticsPanel() {
   const statisticsPanel = document.createElement("div");
   statisticsPanel.className = "game-screen__game-board-container__stats";
 
@@ -49,12 +50,12 @@ function renderStatisticsPanel(game) {
   return statisticsPanel;
 }
 
-function updateTimer(timerElement, seconds) {
-  timerElement.textContent = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+function updateTimer() {
+  timer.textContent = `${String(Math.floor(game.time / 60)).padStart(2, "0")}:${String(game.time % 60).padStart(2, "0")}`;
 }
 
-function updateScore(scoreElement, score) {
-  scoreElement.textContent = `Score: ${score}`;
+function updateScore() {
+  score.textContent = `Score: ${game.score}`;
 }
 
 function continueGameScreen(mode) {
@@ -64,36 +65,36 @@ function continueGameScreen(mode) {
   return gameScreen;
 }
 
-function renderAssistButtons(game) {
+function renderAssistButtons() {
   assistButtons.replaceChildren(
     createAssistButton(
       `Hints (${game.hintsAvailable})`,
       "game-screen__assist-buttons__button",
-      () => getHint(game),
+      () => getHint(),
       game.hintsAvailable,
     ),
     createAssistButton(
       "Revert",
       "game-screen__assist-buttons__button",
-      () => revert(game),
-      game.isRevertAvailable,
+      () => revert(),
+      game.lastStep.numbers.length,
     ),
     createAssistButton(
       `Add Numbers (${game.addNumbersAvailable})`,
       "game-screen__assist-buttons__button",
-      () => addNumbers(game),
+      () => addNumbers(),
       game.canNumbersBeAdded(),
     ),
     createAssistButton(
       `Shuffle (${game.shufflesAvailable})`,
       "game-screen__assist-buttons__button",
-      () => shuffle(game, board),
+      () => shuffle(),
       game.shufflesAvailable,
     ),
     createAssistButton(
       `Eraser (${game.eraserAvailable})`,
       "game-screen__assist-buttons__button",
-      () => eraser(game),
+      () => eraser(),
       game.eraserAvailable,
     ),
   );
@@ -108,7 +109,7 @@ function createAssistButton(label, buttonClass, onClick, enabled) {
   return button;
 }
 
-function renderBoard(game) {
+function renderBoard() {
   const gameBoard = document.createElement("section");
   gameBoard.className = "game-screen__game-board-container__game-board";
 
@@ -159,6 +160,7 @@ function renderBoard(game) {
         game.score += result;
         rerenderBoard(game);
         updateScore(score, game.score);
+        renderAssistButtons(game);
         return;
       }
 
@@ -177,34 +179,37 @@ function renderBoard(game) {
   return gameBoard;
 }
 
-function rerenderBoard(game) {
-  board.replaceChildren(statisticsPanel, renderBoard(game));
+function rerenderBoard() {
+  board.replaceChildren(statisticsPanel, renderBoard());
 }
 
-function addNumbers(game) {
+function addNumbers() {
   if (game.addNumbers()) {
-    rerenderBoard(game);
-    renderAssistButtons(game);
+    rerenderBoard();
+    renderAssistButtons();
   }
 }
 
-function getHint(board) {
-  board.getHint();
+function getHint() {
+  game.getHint();
 }
 
-function revert(board) {
-  board.revert();
+function revert() {
+  game.revert();
+  rerenderBoard();
+  renderAssistButtons();
+  updateScore();
 }
 
-function shuffle(game) {
+function shuffle() {
   if (game.shuffle()) {
-    rerenderBoard(game);
-    renderAssistButtons(game);
+    rerenderBoard();
+    renderAssistButtons();
   }
 }
 
-function eraser(board) {
-  board.eraser();
+function eraser() {
+  game.eraser();
 }
 
 export { newGameScreen, continueGameScreen };

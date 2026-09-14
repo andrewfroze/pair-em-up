@@ -10,7 +10,6 @@ class Game {
     this.time = time;
     this.mode = mode;
     this.board = [];
-    this.isRevertAvailable = false;
     this.addNumbersAvailable = 10;
     this.numbersLimit = 450;
     this.shufflesAvailable = 5;
@@ -23,6 +22,11 @@ class Game {
     this.hints = [];
     this.hintsAvailable = this.collectHints();
     this.maxHintsToShow = 5;
+
+    this.lastStep = {
+      score: this.score,
+      numbers: [],
+    };
   }
 
   collectHints() {
@@ -82,6 +86,7 @@ class Game {
     if (this.shufflesAvailable) {
       this.board = shuffleSequence(this.board);
       this.shufflesAvailable -= 1;
+      this.dropLastStep();
       return true;
     }
     return false;
@@ -107,6 +112,7 @@ class Game {
 
       this.addNumbersAvailable -= 1;
       this.limitNumbers();
+      this.dropLastStep();
       return true;
     }
     return false;
@@ -189,8 +195,32 @@ class Game {
   }
 
   removeNumbers(firstIndex, secondIndex) {
+    this.lastStep.score = this.score;
+    this.lastStep.numbers = [
+      {
+        index: firstIndex,
+        value: this.board[firstIndex],
+      },
+      {
+        index: secondIndex,
+        value: this.board[secondIndex],
+      },
+    ];
     this.board[firstIndex] = null;
     this.board[secondIndex] = null;
+  }
+
+  revert() {
+    this.lastStep.numbers.forEach((item) => {
+      this.board[item.index] = item.value;
+    });
+    this.score = this.lastStep.score;
+    this.lastStep.numbers = [];
+  }
+
+  dropLastStep() {
+    this.lastStep["score"] = this.score;
+    this.lastStep["numbers"] = [];
   }
 }
 
