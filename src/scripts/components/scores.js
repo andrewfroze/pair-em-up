@@ -1,48 +1,209 @@
 import "../../styles/components/scores.scss";
 
-let topResults;
+const MODES = ["classic", "random", "chaotic"];
+const MAX_RESULTS = 5;
+
+let scoresModal;
+
+function loadResults() {
+  const savedResults = localStorage.getItem("topResults");
+
+  if (!savedResults) {
+    return {
+      classic: [],
+      random: [],
+      chaotic: [],
+    };
+  }
+
+  try {
+    const parsedResults = JSON.parse(savedResults);
+
+    return {
+      classic: Array.isArray(parsedResults.classic)
+        ? parsedResults.classic
+        : [],
+      random: Array.isArray(parsedResults.random) ? parsedResults.random : [],
+      chaotic: Array.isArray(parsedResults.chaotic)
+        ? parsedResults.chaotic
+        : [],
+    };
+  } catch {
+    return {
+      classic: [],
+      random: [],
+      chaotic: [],
+    };
+  }
+}
+
+function saveResults(results) {
+  localStorage.setItem("topResults", JSON.stringify(results));
+}
+
+function formatTime(seconds) {
+  return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(
+    seconds % 60,
+  ).padStart(2, "0")}`;
+}
+
+function isTopResult(result) {
+  const results = loadResults()[result.mode] || [];
+
+  if (results.length < MAX_RESULTS) {
+    return true;
+  }
+
+  return result.time <= results[results.length - 1].time;
+}
+
+function addResult(result, name) {
+  const results = loadResults();
+
+  const modeResults = results[result.mode] || [];
+
+  modeResults.push({
+    name: name.trim() || "Player",
+    score: result.score,
+    won: result.won,
+    time: result.time,
+    moves: result.moves,
+    date: Date.now(),
+  });
+
+  modeResults.sort((a, b) => {
+    if (a.time !== b.time) {
+      return a.time - b.time;
+    }
+
+    return b.score - a.score;
+  });
+
+  results[result.mode] = modeResults.slice(0, MAX_RESULTS);
+
+  saveResults(results);
+}
+
+function createResultList(mode) {
+  const results = loadResults()[mode] || [];
+
+  if (!results.length) {
+    const emptyLabel = document.createElement("label");
+    emptyLabel.className = "scores-modal__top-results__no-results";
+    emptyLabel.textContent = "There are no results yet.";
+    return emptyLabel;
+  }
+
+  const list = document.createElement("ol");
+  list.className = "scores-modal__top-results__list";
+
+  results.forEach((result) => {
+    const item = document.createElement("li");
+    item.className = "scores-modal__top-results__list__item";
+
+    const status = document.createElement("span");
+    status.className = "scores-modal__top-results__list__item__status";
+    status.textContent = result.won ? "🏆" : "✕";
+    item.append(status);
+
+    const name = document.createElement("span");
+    name.className = "scores-modal__top-results__list__item__name";
+    name.textContent = result.name;
+
+    const score = document.createElement("span");
+    score.className = "scores-modal__top-results__list__item__score";
+    score.textContent = `${result.score} pts`;
+
+    const metadata = document.createElement("span");
+    metadata.className = "scores-modal__top-results__list__item__metadata";
+
+    metadata.textContent = `${formatTime(result.time)} · ${result.moves} moves`;
+
+    item.append(name, score, metadata);
+    list.append(item);
+  });
+
+  return list;
+}
 
 function createScoresModal() {
   const overlay = document.createElement("div");
   overlay.className = "overlay";
 
-  const scoresModal = document.createElement("div");
-  scoresModal.className = "scores-modal";
-  overlay.append(scoresModal);
+  const modal = document.createElement("div");
+  modal.className = "scores-modal";
+  overlay.append(modal);
 
-  const scoresModalTitle = document.createElement("h2");
-  scoresModalTitle.className = "scores-modal__title";
-  scoresModalTitle.textContent = "Top 10 Results";
-  scoresModal.append(scoresModalTitle);
+  const title = document.createElement("h2");
+  title.className = "scores-modal__title";
+  title.textContent = "Top 5 Results";
+  modal.append(title);
 
-  const scoresContainer = document.createElement("div");
-  scoresContainer.className = "scores-modal__top-results";
-  scoresModal.append(scoresContainer);
+  const tabs = document.createElement("div");
+  tabs.className = "scores-modal__tabs";
+  modal.append(tabs);
 
-  const topResultsList = createTopResultsList();
-  scoresContainer.append(topResultsList);
+  const resultsContainer = document.createElement("div");
+  resultsContainer.className = "scores-modal__top-results";
+  modal.append(resultsContainer);
 
-  const scoresControls = document.createElement("div");
-  scoresControls.className = "scores-modal__controls";
-  scoresModal.append(scoresControls);
+  let activeMode = "classic";
 
-  const fakeButton = createFakeResultsButton(topResultsList);
-  if (fakeButton) {
-    scoresControls.append(fakeButton);
+  function renderResults() {
+    resultsContainer.replaceChildren(createResultList(activeMode));
+
+    tabs.querySelectorAll("button").forEach((button) => {
+      button.classList.toggle("active", button.dataset.mode === activeMode);
+    });
+    updateClearButton();
   }
 
-  const clearButton = createClearButton(topResultsList);
-  if (clearButton) {
-    scoresControls.append(clearButton);
+  MODES.forEach((mode) => {
+    const button = document.createElement("button");
+
+    button.className = "scores-modal__tabs__button";
+    button.dataset.mode = mode;
+    button.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+
+    button.addEventListener("click", () => {
+      activeMode = mode;
+      renderResults();
+    });
+
+    tabs.append(button);
+  });
+
+  const controls = document.createElement("div");
+  controls.className = "scores-modal__controls";
+  modal.append(controls);
+
+  const clearButton = document.createElement("button");
+  clearButton.className = "scores-modal__controls__clear";
+  clearButton.textContent = "Clear";
+
+  function updateClearButton() {
+    const results = loadResults()[activeMode] || [];
+    clearButton.disabled = results.length === 0;
   }
 
-  const closeButton = createCloseButton();
-  scoresControls.append(closeButton);
+  clearButton.addEventListener("click", () => {
+    const results = loadResults();
+    results[activeMode] = [];
+    saveResults(results);
+    renderResults();
+  });
+
+  const closeButton = document.createElement("button");
+  closeButton.className = "scores-modal__controls__close";
+  closeButton.textContent = "Close";
+  closeButton.addEventListener("click", closeScores);
+
+  controls.append(clearButton, closeButton);
+
+  renderResults();
 
   return overlay;
 }
-
-let scoresModal;
 
 function openScores() {
   scoresModal = createScoresModal();
@@ -56,97 +217,8 @@ function closeScores() {
   }
 }
 
-function loadTopResults() {
-  topResults = JSON.parse(localStorage.getItem("topResults"));
+function saveGameResult(result, name) {
+  addResult(result, name);
 }
 
-function createTopResultsList() {
-  loadTopResults();
-
-  if (!topResults || topResults.length < 1) {
-    const noResultsLabel = document.createElement("label");
-    noResultsLabel.textContent = "There are no results yet.";
-    noResultsLabel.className = "scores-modal__top-results__no-results";
-    return noResultsLabel;
-  }
-
-  const topResultsList = document.createElement("ul");
-  topResultsList.className = "scores-modal__top-results__list";
-  for (const resultItem of topResults) {
-    const topResultsItem = document.createElement("li");
-    topResultsItem.className = "scores-modal__top-results__list__item";
-    topResultsList.append(topResultsItem);
-
-    const nicknameLabel = document.createElement("label");
-    nicknameLabel.className = "scores-modal__top-results__list__item__name";
-    nicknameLabel.textContent = resultItem["name"];
-    topResultsItem.append(nicknameLabel);
-
-    const scoreLabel = document.createElement("label");
-    scoreLabel.className = "scores-modal__top-results__list__item__score";
-    scoreLabel.textContent = resultItem["score"];
-    topResultsItem.append(scoreLabel);
-  }
-  return topResultsList;
-}
-
-function createClearButton(topResultsList) {
-  if (topResults && topResults.length > 0) {
-    const clearButton = document.createElement("button");
-    clearButton.textContent = "Clear";
-    clearButton.className = "scores-modal__controls__clear";
-
-    clearButton.addEventListener("click", () => {
-      clearScores();
-      const newTopResults = createTopResultsList();
-      topResultsList.replaceWith(newTopResults);
-
-      clearButton.replaceWith(createFakeResultsButton(newTopResults));
-    });
-
-    return clearButton;
-  }
-}
-
-function createFakeResultsButton(topResultsList) {
-  if (!topResults || topResults.length < 1) {
-    const fakeButton = document.createElement("button");
-    fakeButton.textContent = "Fake";
-    fakeButton.className = "scores-modal__controls__fake";
-
-    fakeButton.addEventListener("click", () => {
-      fillTopScores();
-      const newTopResults = createTopResultsList();
-      topResultsList.replaceWith(newTopResults);
-
-      fakeButton.replaceWith(createClearButton(newTopResults));
-    });
-
-    return fakeButton;
-  }
-}
-
-function createCloseButton() {
-  const closeButton = document.createElement("button");
-  closeButton.textContent = "Close";
-  closeButton.className = "scores-modal__controls__close";
-
-  closeButton.addEventListener("click", () => {
-    closeScores();
-  });
-
-  return closeButton;
-}
-
-function fillTopScores() {
-  localStorage.setItem(
-    "topResults",
-    '[{"name":"andrewfroze", "score":100},{"name":"nemesida", "score":99},{"name":"player1", "score":98},{"name":"player2", "score":97},{"name":"player3", "score":96},{"name":"player4", "score":95},{"name":"player5", "score":94},{"name":"player6", "score":93},{"name":"player7", "score":92},{"name":"player8", "score":91}]',
-  );
-}
-
-function clearScores() {
-  localStorage.setItem("topResults", "[]");
-}
-
-export { openScores, closeScores };
+export { openScores, closeScores, isTopResult, saveGameResult, formatTime };
