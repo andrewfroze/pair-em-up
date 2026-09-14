@@ -279,11 +279,64 @@ class Game {
 
     this.board[index] = null;
     this.eraserAvailable -= 1;
+    this.moves += 1;
 
     this.collectHints();
     this.dropLastStep();
 
     return true;
+  }
+
+  hasWon() {
+    return this.score >= 100;
+  }
+
+  hasReachedBoardLimit() {
+    return this.board.length >= this.numbersLimit;
+  }
+
+  hasValidMoves() {
+    return Boolean(this.hint);
+  }
+
+  areAllAssistsUsed() {
+    return (
+      this.hintsAvailable === 0 &&
+      this.addNumbersAvailable === 0 &&
+      this.shufflesAvailable === 0 &&
+      this.eraserAvailable === 0
+    );
+  }
+
+  hasLost() {
+    return (
+      this.hasReachedBoardLimit() ||
+      (!this.hasValidMoves() && this.areAllAssistsUsed())
+    );
+  }
+
+  getResult() {
+    if (this.hasWon()) {
+      return {
+        won: true,
+        score: this.score,
+        time: this.time,
+        moves: this.moves,
+        mode: this.mode,
+      };
+    }
+
+    if (this.hasLost()) {
+      return {
+        won: false,
+        score: this.score,
+        time: this.time,
+        moves: this.moves,
+        mode: this.mode,
+      };
+    }
+
+    return null;
   }
 }
 
