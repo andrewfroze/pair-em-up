@@ -36,6 +36,14 @@
     align-items: center;
     overflow-y: auto;
 
+    &__stats {
+      display: flex;
+      width: 100%;
+      padding: 5px 2cqw;
+      justify-content: space-between;
+      font-size: clamp(0.5em, 5cqw, 1.5em);
+    }
+
     &__game-board {
       width: 100%;
       max-width: 1000px;
@@ -57,6 +65,49 @@
           border: 0.3vw solid var(--theme-border);
           font-size: clamp(0.5em, 5cqw, 1.5em);
           transition: all 0.3s ease-in-out;
+
+          &.selected {
+            background-color: var(--theme-active-cell);
+          }
+
+          &.disabled {
+            background-color: var(--theme-disabled-cell);
+            color: var(--theme-disabled);
+            cursor: not-allowed;
+            pointer-events: none;
+
+            &:hover {
+              transform: none;
+            }
+          }
+
+          @keyframes cell-error {
+            0%,
+            100% {
+              transform: rotate(0deg);
+            }
+
+            20% {
+              transform: rotate(-8deg);
+            }
+
+            40% {
+              transform: rotate(8deg);
+            }
+
+            60% {
+              transform: rotate(-6deg);
+            }
+
+            80% {
+              transform: rotate(6deg);
+            }
+          }
+
+          &.error {
+            animation: cell-error 0.3s ease-in-out;
+            background-color: var(--theme-error-cell);
+          }
 
           @media (hover: hover) {
             &:hover {

@@ -5,7 +5,9 @@ import {
 } from "./random";
 
 class Game {
-  constructor(mode, isNew = true) {
+  constructor(mode, isNew = true, score = 0, time = 0) {
+    this.score = score;
+    this.time = time;
     this.mode = mode;
     this.board = [];
     this.isRevertAvailable = false;
@@ -133,6 +135,62 @@ class Game {
 
   getNumbersLeft() {
     return this.board.filter((val) => val);
+  }
+
+  checkNumbers(firstIndex, secondIndex) {
+    if (!this.board[firstIndex] || !this.board[secondIndex]) {
+      return 0;
+    }
+
+    if (!this.getApplicableCells(firstIndex).includes(+secondIndex)) {
+      return 0;
+    }
+
+    const first = +this.board[firstIndex];
+    const second = +this.board[secondIndex];
+
+    if (first === 5 && second === 5) {
+      this.removeNumbers(firstIndex, secondIndex);
+      return 3;
+    }
+
+    if (first + second === 10) {
+      this.removeNumbers(firstIndex, secondIndex);
+      return 2;
+    }
+
+    if (first === second) {
+      this.removeNumbers(firstIndex, secondIndex);
+      return 1;
+    }
+
+    return 0;
+  }
+
+  getApplicableCells(index) {
+    index = +index;
+    const applicableCells = [];
+
+    const directions = [1, -1, 9, -9];
+
+    directions.forEach((direction) => {
+      let currentIndex = index + direction;
+
+      while (currentIndex >= 0 && currentIndex < this.board.length) {
+        if (this.board[currentIndex] !== null) {
+          applicableCells.push(currentIndex);
+          break;
+        }
+
+        currentIndex += direction;
+      }
+    });
+    return applicableCells;
+  }
+
+  removeNumbers(firstIndex, secondIndex) {
+    this.board[firstIndex] = null;
+    this.board[secondIndex] = null;
   }
 }
 

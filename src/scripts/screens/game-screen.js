@@ -3,6 +3,10 @@ import { Game } from "../game/game";
 
 let board;
 let assistButtons;
+let statisticsPanel;
+let timer;
+let score;
+let timerInterval;
 
 function newGameScreen(mode) {
   const game = new Game(mode);
@@ -19,10 +23,38 @@ function newGameScreen(mode) {
 
   renderAssistButtons(game);
   gameScreen.append(gameBoardContainer);
-  gameBoardContainer.append(renderBoard(game.board));
+
+  statisticsPanel = renderStatisticsPanel(game);
+  gameBoardContainer.append(statisticsPanel);
+
+  gameBoardContainer.append(renderBoard(game));
   gameScreen.append(assistButtonsContainer);
 
   return gameScreen;
+}
+
+function renderStatisticsPanel(game) {
+  const statisticsPanel = document.createElement("div");
+  statisticsPanel.className = "game-screen__game-board-container__stats";
+
+  timer = document.createElement("label");
+  timer.className = "game-screen__game-board-container__stats__timer";
+  updateTimer(timer, 0);
+
+  score = document.createElement("label");
+  score.className = "game-screen__game-board-container__stats__score";
+  updateScore(score, game.score);
+
+  statisticsPanel.append(score, timer);
+  return statisticsPanel;
+}
+
+function updateTimer(timerElement, seconds) {
+  timerElement.textContent = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+function updateScore(scoreElement, score) {
+  scoreElement.textContent = `Score: ${score}`;
 }
 
 function continueGameScreen(mode) {
@@ -76,26 +108,77 @@ function createAssistButton(label, buttonClass, onClick, enabled) {
   return button;
 }
 
-function renderBoard(boardArray) {
+function renderBoard(game) {
   const gameBoard = document.createElement("section");
   gameBoard.className = "game-screen__game-board-container__game-board";
 
-  for (const item of boardArray) {
+  let selectedLabel;
+
+  game.board.forEach((item, index) => {
     const itemCell = document.createElement("div");
     itemCell.className = "game-screen__game-board-container__game-board__item";
     gameBoard.append(itemCell);
 
     const itemLabel = document.createElement("label");
     itemLabel.textContent = item ?? "";
+    itemLabel.dataset.index = index;
     itemLabel.className =
       "game-screen__game-board-container__game-board__item__label";
+
+    if (!item) {
+      itemLabel.classList.add("disabled");
+    }
     itemCell.append(itemLabel);
-  }
+
+    itemLabel.addEventListener("click", async () => {
+      if (!timerInterval) {
+        timerInterval = setInterval(() => {
+          game.time++;
+          updateTimer(timer, game.time);
+        }, 1000);
+      }
+
+      if (itemLabel.classList.contains("selected")) {
+        itemLabel.classList.remove("selected");
+        selectedLabel = undefined;
+        return;
+      }
+
+      if (!selectedLabel) {
+        itemLabel.classList.add("selected");
+        selectedLabel = itemLabel;
+        return;
+      }
+
+      const result = game.checkNumbers(
+        selectedLabel.dataset.index,
+        itemLabel.dataset.index,
+      );
+
+      if (result) {
+        game.score += result;
+        rerenderBoard(game);
+        updateScore(score, game.score);
+        return;
+      }
+
+      selectedLabel.classList.remove("selected");
+      selectedLabel.classList.add("error");
+      itemLabel.classList.add("error");
+
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      selectedLabel.classList.remove("error");
+      itemLabel.classList.remove("error");
+      selectedLabel = undefined;
+    });
+  });
+
   return gameBoard;
 }
 
 function rerenderBoard(game) {
-  board.replaceChildren(renderBoard(game.board));
+  board.replaceChildren(statisticsPanel, renderBoard(game));
 }
 
 function addNumbers(game) {
