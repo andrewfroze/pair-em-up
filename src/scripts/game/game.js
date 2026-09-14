@@ -79,11 +79,46 @@ class Game {
 
   loadSavedState(mode) {
     const savedState = localStorage.getItem(mode);
-    if (savedState) {
-      this.board = JSON.parse(savedState);
-      return this;
+
+    if (!savedState) {
+      throw new Error("There are no saved states");
     }
-    throw new Error("There are no saved states");
+
+    const state = JSON.parse(savedState);
+
+    this.mode = state.mode;
+    this.board = state.board;
+    this.score = state.score;
+    this.time = state.time;
+    this.moves = state.moves;
+
+    this.addNumbersAvailable = state.addNumbersAvailable;
+    this.shufflesAvailable = state.shufflesAvailable;
+    this.eraserAvailable = state.eraserAvailable;
+
+    this.lastStep = state.lastStep ?? {
+      score: this.score,
+      numbers: [],
+    };
+
+    return this;
+  }
+
+  saveState() {
+    const state = {
+      mode: this.mode,
+      board: this.board,
+      score: this.score,
+      time: this.time,
+      moves: this.moves,
+      addNumbersAvailable: this.addNumbersAvailable,
+      shufflesAvailable: this.shufflesAvailable,
+      eraserAvailable: this.eraserAvailable,
+      hintsAvailable: this.hintsAvailable,
+      lastStep: this.lastStep,
+    };
+
+    localStorage.setItem(this.mode, JSON.stringify(state));
   }
 
   createBoard(mode) {
@@ -131,6 +166,8 @@ class Game {
       this.shufflesAvailable -= 1;
       this.dropLastStep();
       this.hintsAvailable = this.collectHints();
+      this.saveState();
+
       return true;
     }
     return false;
@@ -158,6 +195,8 @@ class Game {
       this.limitNumbers();
       this.dropLastStep();
       this.hintsAvailable = this.collectHints();
+      this.saveState();
+
       return true;
     }
     return false;
@@ -265,6 +304,7 @@ class Game {
     this.score = this.lastStep.score;
     this.lastStep.numbers = [];
     this.hintsAvailable = this.collectHints();
+    this.saveState();
   }
 
   dropLastStep() {
@@ -283,6 +323,7 @@ class Game {
 
     this.collectHints();
     this.dropLastStep();
+    this.saveState();
 
     return true;
   }

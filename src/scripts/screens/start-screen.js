@@ -155,8 +155,7 @@ function createStartScreen({ onNewGame, onContinue }) {
 }
 
 function isGameSaved(gameMod) {
-  console.log("checking game: " + gameMod);
-  return false;
+  return localStorage.getItem(gameMod) !== null;
 }
 
 function openScoresModal() {

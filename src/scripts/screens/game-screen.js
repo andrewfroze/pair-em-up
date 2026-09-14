@@ -13,7 +13,8 @@ let eraserMode = false;
 let gameBoard;
 
 function newGameScreen(mode) {
-  game = new Game(mode);
+  startGame(mode, true);
+
   gameScreen = document.createElement("div");
   gameScreen.className = "game-screen";
 
@@ -33,6 +34,36 @@ function newGameScreen(mode) {
 
   gameBoardContainer.append(renderBoard());
   gameScreen.append(assistButtonsContainer);
+
+  return gameScreen;
+}
+
+function continueGameScreen(mode) {
+  startGame(mode, false);
+
+  gameScreen = document.createElement("div");
+  gameScreen.className = "game-screen";
+
+  const assistButtonsContainer = document.createElement("div");
+  assistButtonsContainer.className = "game-screen__assist-buttons";
+  assistButtons = assistButtonsContainer;
+
+  const gameBoardContainer = document.createElement("div");
+  gameBoardContainer.className = "game-screen__game-board-container";
+  board = gameBoardContainer;
+
+  renderAssistButtons();
+  gameScreen.append(gameBoardContainer);
+
+  statisticsPanel = renderStatisticsPanel();
+  gameBoardContainer.append(statisticsPanel);
+
+  gameBoardContainer.append(renderBoard());
+  gameScreen.append(assistButtonsContainer);
+
+  if (game.time > 0) {
+    startTimer();
+  }
 
   return gameScreen;
 }
@@ -59,13 +90,6 @@ function updateTimer() {
 
 function updateScore() {
   score.textContent = `Score: ${game.score}`;
-}
-
-function continueGameScreen(mode) {
-  const gameScreen = document.createElement("div");
-  gameScreen.className = "game-screen";
-  gameScreen.textContent = `Continue Game (${mode}): Coming soon...`;
-  return gameScreen;
 }
 
 function renderAssistButtons() {
@@ -149,12 +173,7 @@ function renderBoard() {
     itemCell.append(itemLabel);
 
     itemLabel.addEventListener("click", async () => {
-      if (!timerInterval) {
-        timerInterval = setInterval(() => {
-          game.time++;
-          updateTimer(timer, game.time);
-        }, 1000);
-      }
+      startTimer();
 
       if (eraserMode) {
         if (game.eraser(index)) {
@@ -186,6 +205,8 @@ function renderBoard() {
 
       if (result) {
         game.score += result;
+        game.saveState();
+
         rerenderBoard(game);
         updateScore(score, game.score);
         renderAssistButtons(game);
@@ -264,8 +285,40 @@ function shuffle() {
 
 function toggleEraser() {
   eraserMode = !eraserMode;
-
   renderAssistButtons();
+}
+
+function startGame(mode, isNew = true) {
+  game = new Game(mode, isNew);
+
+  window.removeEventListener("beforeunload", saveGame);
+  window.addEventListener("beforeunload", saveGame);
+}
+
+function saveGame() {
+  if (game) {
+    game.saveState();
+  }
+}
+
+let saveCounter = 0;
+
+function startTimer() {
+  if (timerInterval) {
+    return;
+  }
+
+  timerInterval = setInterval(() => {
+    game.time += 1;
+    updateTimer();
+
+    saveCounter += 1;
+
+    if (saveCounter >= 5) {
+      game.saveState();
+      saveCounter = 0;
+    }
+  }, 1000);
 }
 
 export { newGameScreen, continueGameScreen };
