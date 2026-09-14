@@ -5,20 +5,25 @@ import {
 } from "./random";
 
 class Game {
-  constructor(mode, isNew = true, score = 0, time = 0) {
+  constructor(mode, isNew = true, score = 0, time = 0, moves = 0) {
     this.score = score;
     this.time = time;
+    this.moves = moves;
     this.mode = mode;
+
     this.board = [];
+
     this.addNumbersAvailable = 10;
     this.numbersLimit = 450;
     this.shufflesAvailable = 5;
     this.eraserAvailable = 5;
+
     if (isNew) {
       this.createBoard(mode);
     } else {
       this.loadSavedState(mode);
     }
+
     this.hint = [];
     this.hintsAvailable = this.collectHints();
     this.maxHintsToShow = 5;
@@ -195,22 +200,24 @@ class Game {
     const first = +this.board[firstIndex];
     const second = +this.board[secondIndex];
 
+    let result = 0;
+
     if (first === 5 && second === 5) {
-      this.removeNumbers(firstIndex, secondIndex);
-      return 3;
+      result = 3;
     }
 
     if (first + second === 10) {
-      this.removeNumbers(firstIndex, secondIndex);
-      return 2;
+      result = 2;
     }
 
     if (first === second) {
-      this.removeNumbers(firstIndex, secondIndex);
-      return 1;
+      result = 1;
     }
 
-    return 0;
+    this.removeNumbers(firstIndex, secondIndex);
+    this.moves += 1;
+
+    return result;
   }
 
   getApplicableCells(index) {
