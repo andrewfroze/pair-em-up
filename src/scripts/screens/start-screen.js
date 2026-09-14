@@ -2,6 +2,8 @@ import "../../styles/start-screen.scss";
 import { openSettings } from "../components/settings";
 import { openScores } from "../components/scores";
 
+const PLAYER_NAME_MIN_LENGTH = 3;
+const PLAYER_NAME_INPUT_DELAY = 300;
 const gameMods = [
   {
     type: "classic",
@@ -29,6 +31,43 @@ function createStartScreen({ onNewGame, onContinue }) {
   const gameMenu = document.createElement("section");
   gameMenu.className = "start-screen__game-menu";
   startScreenContainer.append(gameMenu);
+
+  const playerNameContainer = document.createElement("div");
+  playerNameContainer.className = "start-screen__game-menu__player-name";
+
+  const playerNameInput = document.createElement("input");
+  playerNameInput.className = "start-screen__game-menu__player-name__input";
+  playerNameInput.type = "text";
+  playerNameInput.placeholder = "Enter your nickname";
+  playerNameInput.maxLength = 20;
+
+  const confirmPlayerNameButton = document.createElement("button");
+  confirmPlayerNameButton.className =
+    "start-screen__game-menu__player-name__confirm";
+  confirmPlayerNameButton.textContent = "✓";
+  confirmPlayerNameButton.title = "Confirm nickname";
+
+  const editPlayerNameButton = document.createElement("button");
+  editPlayerNameButton.className = "start-screen__game-menu__player-name__edit";
+  editPlayerNameButton.textContent = "✎";
+  editPlayerNameButton.title = "Edit nickname";
+
+  editPlayerNameButton.addEventListener("click", () => {
+    playerNameConfirmed = false;
+
+    playerNameInput.disabled = false;
+    playerNameInput.focus();
+
+    updatePlayerNameState();
+  });
+
+  playerNameContainer.append(
+    playerNameInput,
+    confirmPlayerNameButton,
+    editPlayerNameButton,
+  );
+
+  gameMenu.append(playerNameContainer);
 
   const gameModsButtonsContainer = document.createElement("section");
   gameModsButtonsContainer.className = "start-screen__game-menu__game-mods";
@@ -112,10 +151,53 @@ function createStartScreen({ onNewGame, onContinue }) {
   startGameButtonsContainer.append(continueGameButton);
 
   function updateStartGameButtons() {
-    continueGameButton.disabled = !isGameSaved(activeGameMod);
+    continueGameButton.disabled =
+      !playerNameConfirmed || !isGameSaved(activeGameMod);
   }
 
-  updateStartGameButtons();
+  let playerName = getPlayerName();
+  let playerNameConfirmed = playerName.length >= PLAYER_NAME_MIN_LENGTH;
+
+  playerNameInput.value = playerName;
+
+  function updatePlayerNameState() {
+    const isValid =
+      playerNameInput.value.trim().length >= PLAYER_NAME_MIN_LENGTH;
+
+    confirmPlayerNameButton.hidden = !isValid || playerNameConfirmed;
+    editPlayerNameButton.hidden = !playerNameConfirmed;
+
+    playerNameInput.disabled = playerNameConfirmed;
+
+    newGameButton.disabled = !playerNameConfirmed;
+    updateStartGameButtons();
+
+    let playerNameInputTimeout;
+
+    playerNameInput.addEventListener("input", () => {
+      playerNameConfirmed = false;
+
+      clearTimeout(playerNameInputTimeout);
+
+      playerNameInputTimeout = setTimeout(() => {
+        updatePlayerNameState();
+      }, PLAYER_NAME_INPUT_DELAY);
+    });
+
+    confirmPlayerNameButton.addEventListener("click", () => {
+      const name = playerNameInput.value.trim();
+
+      if (name.length < PLAYER_NAME_MIN_LENGTH) {
+        return;
+      }
+
+      playerName = name;
+      playerNameConfirmed = true;
+
+      savePlayerName(playerName);
+      updatePlayerNameState();
+    });
+  }
 
   const additionButtonsContainer = document.createElement("div");
   additionButtonsContainer.className = "start-screen__game-menu__additional";
@@ -151,6 +233,8 @@ function createStartScreen({ onNewGame, onContinue }) {
   authorCreditLink.rel = "noopener noreferrer";
   authorCreditFooter.append(authorCreditLink);
 
+  updatePlayerNameState();
+
   return startScreenContainer;
 }
 
@@ -162,4 +246,36 @@ function openScoresModal() {
   openScores();
 }
 
-export { createStartScreen };
+function getPlayerName() {
+  const savedSettings = localStorage.getItem("settings");
+
+  if (!savedSettings) {
+    return "Player";
+  }
+
+  try {
+    const settings = JSON.parse(savedSettings);
+    return settings.playerName?.trim() || "Player";
+  } catch {
+    return "Player";
+  }
+}
+
+function savePlayerName(playerName) {
+  const savedSettings = localStorage.getItem("settings");
+
+  let settings = {};
+
+  if (savedSettings) {
+    try {
+      settings = JSON.parse(savedSettings);
+    } catch {
+      settings = {};
+    }
+  }
+
+  settings.playerName = playerName;
+  localStorage.setItem("settings", JSON.stringify(settings));
+}
+
+export { createStartScreen, getPlayerName };

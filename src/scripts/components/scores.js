@@ -1,4 +1,5 @@
 import "../../styles/components/scores.scss";
+import { getPlayerName } from "../screens/start-screen";
 
 const MODES = ["classic", "random", "chaotic"];
 const MAX_RESULTS = 5;
@@ -57,13 +58,13 @@ function isTopResult(result) {
   return result.time <= results[results.length - 1].time;
 }
 
-function addResult(result, name) {
+function addResult(result) {
   const results = loadResults();
 
   const modeResults = results[result.mode] || [];
 
   modeResults.unshift({
-    name: name.trim() || "Player",
+    name: getPlayerName(),
     score: result.score,
     won: result.won,
     time: result.time,
@@ -209,8 +210,8 @@ function closeScores() {
   }
 }
 
-function saveGameResult(result, name) {
-  addResult(result, name);
+function saveGameResult(result) {
+  addResult(result);
 }
 
 export {
