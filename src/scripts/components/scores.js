@@ -62,21 +62,13 @@ function addResult(result, name) {
 
   const modeResults = results[result.mode] || [];
 
-  modeResults.push({
+  modeResults.unshift({
     name: name.trim() || "Player",
     score: result.score,
     won: result.won,
     time: result.time,
     moves: result.moves,
     date: Date.now(),
-  });
-
-  modeResults.sort((a, b) => {
-    if (a.time !== b.time) {
-      return a.time - b.time;
-    }
-
-    return b.score - a.score;
   });
 
   results[result.mode] = modeResults.slice(0, MAX_RESULTS);
@@ -136,7 +128,7 @@ function createScoresModal() {
 
   const title = document.createElement("h2");
   title.className = "scores-modal__title";
-  title.textContent = "Top 5 Results";
+  title.textContent = "Last 5 Results";
   modal.append(title);
 
   const tabs = document.createElement("div");
@@ -221,4 +213,11 @@ function saveGameResult(result, name) {
   addResult(result, name);
 }
 
-export { openScores, closeScores, isTopResult, saveGameResult, formatTime };
+export {
+  openScores,
+  closeScores,
+  isTopResult,
+  saveGameResult,
+  formatTime,
+  addResult,
+};

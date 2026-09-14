@@ -1,0 +1,106 @@
+.game-result {
+  container-type: inline-size;
+
+  width: min(80%, 500px);
+  min-width: 280px;
+
+  padding: clamp(
+    calc(var(--theme-font-size) * 0.5),
+    5cqw,
+    calc(var(--theme-font-size) * 1.2)
+  );
+
+  background-color: var(--theme-background);
+  border: 2px solid var(--theme-border);
+
+  text-align: center;
+
+  &__status {
+    font-size: clamp(
+      calc(var(--theme-font-size) * 0.8),
+      8cqw,
+      calc(var(--theme-font-size) * 1.5)
+    );
+
+    line-height: 1;
+    margin-bottom: clamp(5px, 2cqw, 10px);
+  }
+
+  &__title {
+    margin: 0 0 clamp(15px, 4cqw, 25px);
+
+    font-size: clamp(
+      calc(var(--theme-font-size) * 0.7),
+      6cqw,
+      calc(var(--theme-font-size) * 1.1)
+    );
+  }
+
+  &__statistics {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5px, 2cqw, 10px);
+
+    margin-bottom: clamp(15px, 4cqw, 25px);
+
+    &__item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: clamp(5px, 2cqw, 10px);
+
+      border: 2px solid var(--theme-border);
+
+      &__label {
+        font-size: clamp(
+          calc(var(--theme-font-size) * 0.4),
+          3.2cqw,
+          calc(var(--theme-font-size) * 0.7)
+        );
+
+        opacity: 0.6;
+      }
+
+      &__value {
+        font-size: clamp(
+          calc(var(--theme-font-size) * 0.5),
+          4cqw,
+          calc(var(--theme-font-size) * 0.85)
+        );
+
+        font-weight: bold;
+      }
+    }
+  }
+
+  &__controls {
+    display: flex;
+    gap: clamp(5px, 2cqw, 10px);
+
+    button {
+      flex: 1;
+
+      padding: clamp(5px, 2cqw, 10px);
+
+      font-size: clamp(
+        calc(var(--theme-font-size) * 0.4),
+        3.2cqw,
+        calc(var(--theme-font-size) * 0.7)
+      );
+    }
+  }
+
+  &__results-button {
+    width: 100%;
+    margin-top: clamp(5px, 2cqw, 10px);
+
+    padding: clamp(5px, 2cqw, 10px);
+
+    font-size: clamp(
+      calc(var(--theme-font-size) * 0.4),
+      3.2cqw,
+      calc(var(--theme-font-size) * 0.7)
+    );
+  }
+}

@@ -1,5 +1,7 @@
 import "../../styles/game-screen.scss";
 import { Game } from "../game/game";
+import { showGameResult } from "../components/game-result";
+import { openScores, addResult } from "../components/scores";
 
 let gameScreen;
 let board;
@@ -11,9 +13,11 @@ let timerInterval;
 let game;
 let eraserMode = false;
 let gameBoard;
+let onMainMenuGlobal;
 
-function newGameScreen(mode) {
+function newGameScreen(mode, { onMainMenu }) {
   startGame(mode, true);
+  onMainMenuGlobal = onMainMenu;
 
   gameScreen = document.createElement("div");
   gameScreen.className = "game-screen";
@@ -38,8 +42,9 @@ function newGameScreen(mode) {
   return gameScreen;
 }
 
-function continueGameScreen(mode) {
+function continueGameScreen(mode, { onMainMenu }) {
   startGame(mode, false);
+  onMainMenuGlobal = onMainMenu;
 
   gameScreen = document.createElement("div");
   gameScreen.className = "game-screen";
@@ -210,6 +215,8 @@ function renderBoard() {
         rerenderBoard(game);
         updateScore(score, game.score);
         renderAssistButtons(game);
+
+        checkGameEnd();
         return;
       }
 
@@ -238,6 +245,8 @@ function addNumbers() {
   if (game.addNumbers()) {
     rerenderBoard();
     renderAssistButtons();
+
+    checkGameEnd();
   }
 }
 
@@ -280,6 +289,8 @@ function shuffle() {
   if (game.shuffle()) {
     rerenderBoard();
     renderAssistButtons();
+
+    checkGameEnd();
   }
 }
 
@@ -319,6 +330,53 @@ function startTimer() {
       saveCounter = 0;
     }
   }, 1000);
+}
+
+function checkGameEnd() {
+  const result = game.getResult();
+
+  if (!result) {
+    return false;
+  }
+
+  stopTimer();
+
+  localStorage.removeItem(game.mode);
+
+  saveGameResult(result, "Player");
+
+  showGameResult(result, {
+    onPlayAgain: () => restartGame(),
+    onMainMenu: onMainMenuGlobal,
+    onResults: () => openScores(),
+  });
+
+  return true;
+}
+
+function saveGameResult(result, name) {
+  addResult(result, name);
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = undefined;
+  }
+}
+
+function restartGame() {
+  stopTimer();
+
+  eraserMode = false;
+
+  game = new Game(game.mode);
+
+  statisticsPanel = renderStatisticsPanel();
+  rerenderBoard();
+  renderAssistButtons();
+
+  checkGameEnd();
 }
 
 export { newGameScreen, continueGameScreen };

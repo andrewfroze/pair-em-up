@@ -14,8 +14,10 @@ showStartScreen();
 function showStartScreen() {
   renderScreen(
     createStartScreen({
-      onNewGame: (mode) => startNewGame(mode),
-      onContinue: (mode) => continueGame(mode),
+      onNewGame: (mode) =>
+        startNewGame(mode, { onMainMenu: () => showStartScreen() }),
+      onContinue: (mode) =>
+        continueGame(mode, { onMainMenu: () => showStartScreen() }),
     }),
   );
 }
@@ -31,11 +33,13 @@ function renderScreen(screen) {
 }
 
 function startNewGame(mode) {
-  renderScreen(newGameScreen(mode, () => showStartScreen()));
+  renderScreen(newGameScreen(mode, { onMainMenu: () => showStartScreen() }));
 }
 
 function continueGame(mode) {
-  renderScreen(continueGameScreen(mode, () => showStartScreen()));
+  renderScreen(
+    continueGameScreen(mode, { onMainMenu: () => showStartScreen() }),
+  );
 }
 
 export { gameArea };

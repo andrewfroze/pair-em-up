@@ -253,8 +253,10 @@ class Game {
       result = 1;
     }
 
-    this.removeNumbers(firstIndex, secondIndex);
-    this.moves += 1;
+    if (result) {
+      this.removeNumbers(firstIndex, secondIndex);
+      this.moves += 1;
+    }
 
     return result;
   }
@@ -329,7 +331,7 @@ class Game {
   }
 
   hasWon() {
-    return this.score >= 100;
+    return this.score >= 5;
   }
 
   hasReachedBoardLimit() {
