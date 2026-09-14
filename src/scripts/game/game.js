@@ -19,7 +19,7 @@ class Game {
     } else {
       this.loadSavedState(mode);
     }
-    this.hints = [];
+    this.hint = [];
     this.hintsAvailable = this.collectHints();
     this.maxHintsToShow = 5;
 
@@ -30,8 +30,46 @@ class Game {
   }
 
   collectHints() {
-    // todo fill this.hints
-    return this.hints.length;
+    this.hint = undefined;
+
+    const hints = [];
+
+    for (let firstIndex = 0; firstIndex < this.board.length; firstIndex += 1) {
+      if (this.board[firstIndex] == null) {
+        continue;
+      }
+
+      const applicableCells = this.getApplicableCells(firstIndex);
+
+      for (const secondIndex of applicableCells) {
+        if (secondIndex <= firstIndex) {
+          continue;
+        }
+
+        const first = this.board[firstIndex];
+        const second = this.board[secondIndex];
+
+        if (
+          (first === 5 && second === 5) ||
+          first + second === 10 ||
+          first === second
+        ) {
+          if (!this.hint) {
+            this.hint = [firstIndex, secondIndex];
+          }
+
+          hints.push([firstIndex, secondIndex]);
+
+          if (hints.length > 5) {
+            this.hintsAvailable = "5+";
+            return this.hintsAvailable;
+          }
+        }
+      }
+    }
+
+    this.hintsAvailable = hints.length;
+    return this.hintsAvailable;
   }
 
   loadSavedState(mode) {
@@ -87,6 +125,7 @@ class Game {
       this.board = shuffleSequence(this.board);
       this.shufflesAvailable -= 1;
       this.dropLastStep();
+      this.hintsAvailable = this.collectHints();
       return true;
     }
     return false;
@@ -113,6 +152,7 @@ class Game {
       this.addNumbersAvailable -= 1;
       this.limitNumbers();
       this.dropLastStep();
+      this.hintsAvailable = this.collectHints();
       return true;
     }
     return false;
@@ -208,6 +248,7 @@ class Game {
     ];
     this.board[firstIndex] = null;
     this.board[secondIndex] = null;
+    this.hintsAvailable = this.collectHints();
   }
 
   revert() {
@@ -216,6 +257,7 @@ class Game {
     });
     this.score = this.lastStep.score;
     this.lastStep.numbers = [];
+    this.hintsAvailable = this.collectHints();
   }
 
   dropLastStep() {

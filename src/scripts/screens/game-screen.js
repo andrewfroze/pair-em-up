@@ -191,7 +191,25 @@ function addNumbers() {
 }
 
 function getHint() {
-  game.getHint();
+  const hintPair = game.hint;
+
+  if (!hintPair) {
+    return;
+  }
+
+  const labels = board.querySelectorAll(
+    ".game-screen__game-board-container__game-board__item__label",
+  );
+
+  const [firstIndex, secondIndex] = hintPair;
+
+  labels[firstIndex].classList.add("hint");
+  labels[secondIndex].classList.add("hint");
+
+  setTimeout(() => {
+    labels[firstIndex].classList.remove("hint");
+    labels[secondIndex].classList.remove("hint");
+  }, 2100);
 }
 
 function revert() {

@@ -81,6 +81,21 @@
             }
           }
 
+          &.hint {
+            animation: hint-pulse 0.7s ease-in-out 3;
+          }
+
+          @keyframes hint-pulse {
+            0%,
+            100% {
+              transform: scale(1);
+            }
+
+            50% {
+              transform: scale(1.15);
+            }
+          }
+
           @keyframes cell-error {
             0%,
             100% {
