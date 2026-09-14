@@ -6,6 +6,15 @@
   justify-content: space-between;
   overflow: hidden;
 
+  &.eraser-mode {
+    cursor: var(--eraser-cursor), auto;
+
+    .game-screen__assist-buttons__button:not(.active) {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
+
   &__assist-buttons {
     border-top: 1px solid var(--theme-border);
     bottom: 0;
@@ -26,6 +35,10 @@
         3cqw,
         calc(var(--theme-font-size) * 0.8)
       );
+
+      &.eraser.selected {
+        background-color: var(--theme-active-cell);
+      }
     }
   }
 
@@ -49,6 +62,7 @@
       max-width: 1000px;
       display: grid;
       grid-template-columns: repeat(9, 1fr);
+      overflow-y: auto;
 
       &__item {
         aspect-ratio: 1;
@@ -65,6 +79,7 @@
           border: 0.3vw solid var(--theme-border);
           font-size: clamp(0.5em, 5cqw, 1.5em);
           transition: all 0.3s ease-in-out;
+          cursor: pointer;
 
           &.selected {
             background-color: var(--theme-active-cell);

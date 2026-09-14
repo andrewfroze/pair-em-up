@@ -1,6 +1,7 @@
 import "../../styles/game-screen.scss";
 import { Game } from "../game/game";
 
+let gameScreen;
 let board;
 let assistButtons;
 let statisticsPanel;
@@ -8,10 +9,12 @@ let timer;
 let score;
 let timerInterval;
 let game;
+let eraserMode = false;
+let gameBoard;
 
 function newGameScreen(mode) {
   game = new Game(mode);
-  const gameScreen = document.createElement("div");
+  gameScreen = document.createElement("div");
   gameScreen.className = "game-screen";
 
   const assistButtonsContainer = document.createElement("div");
@@ -72,45 +75,59 @@ function renderAssistButtons() {
       "game-screen__assist-buttons__button",
       () => getHint(),
       game.hintsAvailable,
+      true,
     ),
     createAssistButton(
       "Revert",
       "game-screen__assist-buttons__button",
       () => revert(),
       game.lastStep.numbers.length,
+      true,
     ),
     createAssistButton(
       `Add Numbers (${game.addNumbersAvailable})`,
       "game-screen__assist-buttons__button",
       () => addNumbers(),
       game.canNumbersBeAdded(),
+      true,
     ),
     createAssistButton(
       `Shuffle (${game.shufflesAvailable})`,
       "game-screen__assist-buttons__button",
       () => shuffle(),
       game.shufflesAvailable,
+      true,
     ),
     createAssistButton(
       `Eraser (${game.eraserAvailable})`,
-      "game-screen__assist-buttons__button",
-      () => eraser(),
+      "game-screen__assist-buttons__button eraser",
+      () => toggleEraser(),
       game.eraserAvailable,
+      false,
     ),
   );
 }
 
-function createAssistButton(label, buttonClass, onClick, enabled) {
+function createAssistButton(
+  label,
+  buttonClass,
+  onClick,
+  enabled,
+  isBlockedByEraser,
+) {
   const button = document.createElement("button");
   button.className = buttonClass;
   button.textContent = label;
-  button.disabled = !enabled;
+  button.disabled = !enabled || (eraserMode && isBlockedByEraser);
+  if (eraserMode) {
+    button.classList.add("selected");
+  }
   button.addEventListener("click", () => onClick());
   return button;
 }
 
 function renderBoard() {
-  const gameBoard = document.createElement("section");
+  gameBoard = document.createElement("section");
   gameBoard.className = "game-screen__game-board-container__game-board";
 
   let selectedLabel;
@@ -137,6 +154,17 @@ function renderBoard() {
           game.time++;
           updateTimer(timer, game.time);
         }, 1000);
+      }
+
+      if (eraserMode) {
+        if (game.eraser(index)) {
+          eraserMode = false;
+
+          rerenderBoard();
+          renderAssistButtons();
+        }
+
+        return;
       }
 
       if (itemLabel.classList.contains("selected")) {
@@ -180,7 +208,9 @@ function renderBoard() {
 }
 
 function rerenderBoard() {
+  const scrollTop = gameBoard?.scrollTop ?? 0;
   board.replaceChildren(statisticsPanel, renderBoard());
+  gameBoard.scrollTop = scrollTop;
 }
 
 function addNumbers() {
@@ -203,6 +233,12 @@ function getHint() {
 
   const [firstIndex, secondIndex] = hintPair;
 
+  const label = labels[firstIndex];
+
+  gameBoard.scrollTo({
+    top: label.offsetTop - gameBoard.clientHeight / 2 + label.offsetHeight / 2,
+    behavior: "smooth",
+  });
   labels[firstIndex].classList.add("hint");
   labels[secondIndex].classList.add("hint");
 
@@ -226,8 +262,10 @@ function shuffle() {
   }
 }
 
-function eraser() {
-  game.eraser();
+function toggleEraser() {
+  eraserMode = !eraserMode;
+
+  renderAssistButtons();
 }
 
 export { newGameScreen, continueGameScreen };

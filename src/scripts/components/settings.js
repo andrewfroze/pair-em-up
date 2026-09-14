@@ -23,6 +23,7 @@ const themes = [
     font: "DM Sans",
     fontSize: "24px",
     buttonFontSize: "21px",
+    eraserCursor: "eraser-classic.svg",
   },
   {
     name: "Dark",
@@ -38,6 +39,7 @@ const themes = [
     font: "Montserrat",
     fontSize: "24px",
     buttonFontSize: "21px",
+    eraserCursor: "eraser-dark.svg",
   },
   {
     name: "Jedi",
@@ -53,6 +55,7 @@ const themes = [
     font: "Cinzel",
     fontSize: "22px",
     buttonFontSize: "18px",
+    eraserCursor: "eraser-jedi.svg",
   },
   {
     name: "Sith",
@@ -68,6 +71,7 @@ const themes = [
     font: "UnifrakturCook",
     fontSize: "25px",
     buttonFontSize: "20px",
+    eraserCursor: "eraser-sith.svg",
   },
   {
     name: "Cyberpunk",
@@ -83,6 +87,7 @@ const themes = [
     font: "Orbitron",
     fontSize: "21px",
     buttonFontSize: "18px",
+    eraserCursor: "eraser-cyberpunk.svg",
   },
   {
     name: "Galaxy",
@@ -98,6 +103,7 @@ const themes = [
     font: "Audiowide",
     fontSize: "20px",
     buttonFontSize: "18px",
+    eraserCursor: "eraser-galaxy.svg",
   },
   {
     name: "Vampire",
@@ -113,6 +119,7 @@ const themes = [
     font: "Creepster",
     fontSize: "27px",
     buttonFontSize: "24px",
+    eraserCursor: "eraser-vampire.svg",
   },
   {
     name: "Forest",
@@ -128,6 +135,7 @@ const themes = [
     font: "Alegreya",
     fontSize: "23px",
     buttonFontSize: "20px",
+    eraserCursor: "eraser-forest.svg",
   },
   {
     name: "Pirate",
@@ -143,6 +151,7 @@ const themes = [
     font: "Pirata One",
     fontSize: "24px",
     buttonFontSize: "20px",
+    eraserCursor: "eraser-pirate.svg",
   },
   {
     name: "Retro Terminal",
@@ -158,6 +167,7 @@ const themes = [
     font: "VT323",
     fontSize: "30px",
     buttonFontSize: "24px",
+    eraserCursor: "eraser-retro-terminal.svg",
   },
 ];
 
@@ -356,6 +366,10 @@ function applyTheme() {
   document.documentElement.style.setProperty(
     "--theme-disabled-cell",
     theme.disabledCell,
+  );
+  document.documentElement.style.setProperty(
+    "--eraser-cursor",
+    `url("${theme.eraserCursor}")`,
   );
 }
 

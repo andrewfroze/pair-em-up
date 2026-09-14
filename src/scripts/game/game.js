@@ -264,6 +264,20 @@ class Game {
     this.lastStep["score"] = this.score;
     this.lastStep["numbers"] = [];
   }
+
+  eraser(index) {
+    if (!this.eraserAvailable || this.board[index] == null) {
+      return false;
+    }
+
+    this.board[index] = null;
+    this.eraserAvailable -= 1;
+
+    this.collectHints();
+    this.dropLastStep();
+
+    return true;
+  }
 }
 
 export { Game };
