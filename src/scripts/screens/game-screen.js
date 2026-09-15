@@ -6,7 +6,7 @@ import { openScores, addResult } from "../components/scores";
 let gameScreen;
 let board;
 let assistButtons;
-let statisticsPanel;
+let headerPanel;
 let timer;
 let score;
 let timerInterval;
@@ -33,8 +33,8 @@ function newGameScreen(mode, { onMainMenu }) {
   renderAssistButtons();
   gameScreen.append(gameBoardContainer);
 
-  statisticsPanel = renderStatisticsPanel();
-  gameBoardContainer.append(statisticsPanel);
+  headerPanel = renderHeaderPanel();
+  gameBoardContainer.append(headerPanel);
 
   gameBoardContainer.append(renderBoard());
   gameScreen.append(assistButtonsContainer);
@@ -60,8 +60,8 @@ function continueGameScreen(mode, { onMainMenu }) {
   renderAssistButtons();
   gameScreen.append(gameBoardContainer);
 
-  statisticsPanel = renderStatisticsPanel();
-  gameBoardContainer.append(statisticsPanel);
+  headerPanel = renderHeaderPanel();
+  gameBoardContainer.append(headerPanel);
 
   gameBoardContainer.append(renderBoard());
   gameScreen.append(assistButtonsContainer);
@@ -73,7 +73,20 @@ function continueGameScreen(mode, { onMainMenu }) {
   return gameScreen;
 }
 
-function renderStatisticsPanel() {
+function renderHeaderPanel() {
+  const headerPanel = document.createElement("div");
+  headerPanel.className = "game-board-header";
+
+  const mainMenuButton = document.createElement("button");
+  mainMenuButton.className =
+    "game-screen__game-board-container__main-menu-button";
+  mainMenuButton.textContent = "←";
+  mainMenuButton.title = "Main Menu";
+
+  mainMenuButton.addEventListener("click", () => {
+    onMainMenuGlobal();
+  });
+
   const statisticsPanel = document.createElement("div");
   statisticsPanel.className = "game-screen__game-board-container__stats";
 
@@ -86,7 +99,9 @@ function renderStatisticsPanel() {
   updateScore(score, game.score);
 
   statisticsPanel.append(score, timer);
-  return statisticsPanel;
+  headerPanel.append(mainMenuButton, statisticsPanel);
+
+  return headerPanel;
 }
 
 function updateTimer() {
@@ -237,7 +252,7 @@ function renderBoard() {
 
 function rerenderBoard() {
   const scrollTop = gameBoard?.scrollTop ?? 0;
-  board.replaceChildren(statisticsPanel, renderBoard());
+  board.replaceChildren(headerPanel, renderBoard());
   gameBoard.scrollTop = scrollTop;
 }
 
@@ -372,7 +387,7 @@ function restartGame() {
 
   game = new Game(game.mode);
 
-  statisticsPanel = renderStatisticsPanel();
+  headerPanel = renderHeaderPanel();
   rerenderBoard();
   renderAssistButtons();
 

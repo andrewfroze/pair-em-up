@@ -48,6 +48,33 @@
     align-items: center;
     overflow-y: auto;
 
+    &__main-menu-button {
+      width: var(--theme-button-font-size);
+      height: var(--theme-button-font-size);
+      max-width: 32px;
+      max-height: 32px;
+      padding: 2cqw;
+      margin: 1cqw;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      border: 2px solid var(--theme-border);
+      background: var(--theme-background);
+      color: var(--theme-text);
+
+      font-size: calc(var(--theme-button-font-size) * 0.7);
+      line-height: 1;
+
+      cursor: pointer;
+
+      &:hover {
+        background: var(--theme-active);
+        color: var(--theme-background);
+      }
+    }
+
     &__stats {
       display: flex;
       width: 100%;
@@ -147,4 +174,10 @@
       }
     }
   }
+}
+
+.game-board-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
 }
