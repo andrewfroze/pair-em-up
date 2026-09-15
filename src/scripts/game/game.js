@@ -331,7 +331,7 @@ class Game {
   }
 
   hasWon() {
-    return this.score >= 5;
+    return this.score >= 100;
   }
 
   hasReachedBoardLimit() {
