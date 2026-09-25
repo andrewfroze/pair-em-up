@@ -37,6 +37,7 @@ function createStartScreen({ onNewGame, onContinue }) {
 
   const playerNameInput = document.createElement("input");
   playerNameInput.className = "start-screen__game-menu__player-name__input";
+  playerNameInput.id = "nickname";
   playerNameInput.type = "text";
   playerNameInput.placeholder = "Enter your nickname";
   playerNameInput.maxLength = 20;

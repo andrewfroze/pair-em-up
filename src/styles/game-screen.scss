@@ -64,7 +64,11 @@
       background: var(--theme-background);
       color: var(--theme-text);
 
-      font-size: calc(var(--theme-button-font-size) * 0.7);
+      font-size: clamp(
+        var(--theme-button-font-size) * 0.5,
+        2cqw,
+        var(--theme-button-font-size) * 2
+      );
       line-height: 1;
 
       cursor: pointer;
@@ -88,7 +92,7 @@
       max-width: 1000px;
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      overflow-y: auto;
+      overflow-y: hidden;
 
       &__item {
         aspect-ratio: 1;

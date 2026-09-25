@@ -243,13 +243,9 @@ class Game {
 
     if (first === 5 && second === 5) {
       result = 3;
-    }
-
-    if (first + second === 10) {
+    } else if (first + second === 10) {
       result = 2;
-    }
-
-    if (first === second) {
+    } else if (first === second) {
       result = 1;
     }
 
