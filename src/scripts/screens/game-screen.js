@@ -45,6 +45,7 @@ function newGameScreen(mode, { onMainMenu }) {
 function continueGameScreen(mode, { onMainMenu }) {
   startGame(mode, false);
   onMainMenuGlobal = onMainMenu;
+  checkGameEnd();
 
   gameScreen = document.createElement("div");
   gameScreen.className = "game-screen";
@@ -201,6 +202,7 @@ function renderBoard() {
 
           rerenderBoard();
           renderAssistButtons();
+          checkGameEnd();
         }
 
         return;

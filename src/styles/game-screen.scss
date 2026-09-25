@@ -92,7 +92,7 @@
       max-width: 1000px;
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      overflow-y: hidden;
+      overflow-y: auto;
 
       &__item {
         aspect-ratio: 1;
