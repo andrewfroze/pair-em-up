@@ -200,6 +200,9 @@ function createAssistButton(
   button.disabled = !enabled || (eraserMode && isBlockedByEraser);
   if (eraserMode) {
     button.classList.add("selected");
+    gameScreen.classList.add("eraser-mode");
+  } else {
+    gameScreen.classList.remove("eraser-mode");
   }
   button.addEventListener("click", () => onClick());
   return button;
@@ -234,6 +237,7 @@ function renderBoard() {
         if (game.eraser(index)) {
           eraserMode = false;
 
+          gameScreen.classList.remove("eraser-mode");
           playErase();
 
           rerenderBoard();
