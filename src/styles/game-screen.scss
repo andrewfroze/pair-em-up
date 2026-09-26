@@ -93,6 +93,7 @@
       display: grid;
       grid-template-columns: repeat(9, 1fr);
       overflow-y: auto;
+      overflow-x: hidden;
 
       &__item {
         aspect-ratio: 1;

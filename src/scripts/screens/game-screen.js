@@ -45,7 +45,6 @@ function newGameScreen(mode, { onMainMenu }) {
 function continueGameScreen(mode, { onMainMenu }) {
   startGame(mode, false);
   onMainMenuGlobal = onMainMenu;
-  checkGameEnd();
 
   gameScreen = document.createElement("div");
   gameScreen.className = "game-screen";
@@ -67,9 +66,18 @@ function continueGameScreen(mode, { onMainMenu }) {
   gameBoardContainer.append(renderBoard());
   gameScreen.append(assistButtonsContainer);
 
-  if (game.time > 0) {
+  const gameEnd = checkGameEnd();
+
+  if (!gameEnd && game.time > 0) {
     startTimer();
   }
+
+  requestAnimationFrame(() => {
+    if (gameEnd) {
+      removeSavedGame();
+      return;
+    }
+  });
 
   return gameScreen;
 }
@@ -358,7 +366,7 @@ function checkGameEnd() {
 
   stopTimer();
 
-  localStorage.removeItem(game.mode);
+  removeSavedGame();
 
   saveGameResult(result, "Player");
 
@@ -369,6 +377,10 @@ function checkGameEnd() {
   });
 
   return true;
+}
+
+function removeSavedGame() {
+  localStorage.removeItem(game.mode);
 }
 
 function saveGameResult(result, name) {

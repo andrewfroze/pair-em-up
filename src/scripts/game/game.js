@@ -350,8 +350,13 @@ class Game {
   hasLost() {
     return (
       this.hasReachedBoardLimit() ||
+      !this.hasNumbers() ||
       (!this.hasValidMoves() && this.areAllAssistsUsed())
     );
+  }
+
+  hasNumbers() {
+    return this.board.filter((number) => number !== null).length > 0;
   }
 
   getResult() {
