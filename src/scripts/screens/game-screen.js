@@ -118,7 +118,7 @@ function updateTimer() {
 }
 
 function updateScore() {
-  score.textContent = `Score: ${game.score}`;
+  score.textContent = `Score: ${game.score} / ${game.targetScore}`;
 }
 
 function renderAssistButtons() {

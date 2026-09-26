@@ -13,6 +13,7 @@ class Game {
 
     this.board = [];
 
+    this.targetScore = 100;
     this.addNumbersAvailable = 10;
     this.numbersLimit = 450;
     this.shufflesAvailable = 5;
@@ -327,7 +328,7 @@ class Game {
   }
 
   hasWon() {
-    return this.score >= 100;
+    return this.score >= this.targetScore;
   }
 
   hasReachedBoardLimit() {
