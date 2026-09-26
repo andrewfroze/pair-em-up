@@ -152,7 +152,6 @@ class Game {
   placeSequenceToBoard() {
     this.board = [];
     let lastFilled = 0;
-    console.log(this.sequence);
     for (const item of this.sequence) {
       if (item % 10) {
         for (const number of item.toString().split("")) {

@@ -91,31 +91,33 @@ function createResultList(mode) {
   const list = document.createElement("ol");
   list.className = "scores-modal__top-results__list";
 
-  results.forEach((result) => {
-    const item = document.createElement("li");
-    item.className = "scores-modal__top-results__list__item";
+  results
+    .sort((a, b) => a.time - b.time)
+    .forEach((result) => {
+      const item = document.createElement("li");
+      item.className = "scores-modal__top-results__list__item";
 
-    const status = document.createElement("span");
-    status.className = "scores-modal__top-results__list__item__status";
-    status.textContent = result.won ? "🏆" : "✕";
-    item.append(status);
+      const status = document.createElement("span");
+      status.className = "scores-modal__top-results__list__item__status";
+      status.textContent = result.won ? "🏆" : "✕";
+      item.append(status);
 
-    const name = document.createElement("span");
-    name.className = "scores-modal__top-results__list__item__name";
-    name.textContent = result.name;
+      const name = document.createElement("span");
+      name.className = "scores-modal__top-results__list__item__name";
+      name.textContent = result.name;
 
-    const score = document.createElement("span");
-    score.className = "scores-modal__top-results__list__item__score";
-    score.textContent = `${result.score} pts`;
+      const time = document.createElement("span");
+      time.className = "scores-modal__top-results__list__item__time";
+      time.textContent = `${formatTime(result.time)}`;
 
-    const metadata = document.createElement("span");
-    metadata.className = "scores-modal__top-results__list__item__metadata";
+      const metadata = document.createElement("span");
+      metadata.className = "scores-modal__top-results__list__item__metadata";
 
-    metadata.textContent = `${formatTime(result.time)} · ${result.moves} moves`;
+      metadata.textContent = `Score: ${result.score} · ${result.moves} moves`;
 
-    item.append(name, score, metadata);
-    list.append(item);
-  });
+      item.append(name, time, metadata);
+      list.append(item);
+    });
 
   return list;
 }

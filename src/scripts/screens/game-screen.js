@@ -381,7 +381,9 @@ function checkGameEnd() {
 
   removeSavedGame();
 
-  saveGameResult(result, "Player");
+  if (result.won) {
+    saveGameResult(result);
+  }
 
   showGameResult(result, {
     onPlayAgain: () => restartGame(),
@@ -396,8 +398,8 @@ function removeSavedGame() {
   localStorage.removeItem(game.mode);
 }
 
-function saveGameResult(result, name) {
-  addResult(result, name);
+function saveGameResult(result) {
+  addResult(result);
 }
 
 function stopTimer() {
