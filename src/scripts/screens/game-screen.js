@@ -2,6 +2,19 @@ import "../../styles/game-screen.scss";
 import { Game } from "../game/game";
 import { showGameResult } from "../components/game-result";
 import { openScores, addResult } from "../components/scores";
+import {
+  playSelect,
+  playPairSelect,
+  playValidPair,
+  playInvalidPair,
+  playErase,
+  playWin,
+  playLose,
+  playShuffle,
+  playAddNumbers,
+  playRevert,
+  playHint,
+} from "../sound/sound-service";
 
 let gameScreen;
 let board;
@@ -221,6 +234,8 @@ function renderBoard() {
         if (game.eraser(index)) {
           eraserMode = false;
 
+          playErase();
+
           rerenderBoard();
           renderAssistButtons();
           checkGameEnd();
@@ -238,8 +253,11 @@ function renderBoard() {
       if (!selectedLabel) {
         itemLabel.classList.add("selected");
         selectedLabel = itemLabel;
+        playSelect();
         return;
       }
+
+      playPairSelect();
 
       const result = game.checkNumbers(
         selectedLabel.dataset.index,
@@ -250,6 +268,8 @@ function renderBoard() {
         game.score += result;
         game.saveState();
 
+        playValidPair();
+
         rerenderBoard(game);
         updateScore(score, game.score);
         renderAssistButtons(game);
@@ -257,6 +277,8 @@ function renderBoard() {
         checkGameEnd();
         return;
       }
+
+      playInvalidPair();
 
       selectedLabel.classList.remove("selected");
       selectedLabel.classList.add("error");
@@ -284,6 +306,8 @@ function addNumbers() {
     rerenderBoard();
     renderAssistButtons();
 
+    playAddNumbers();
+
     checkGameEnd();
   }
 }
@@ -294,6 +318,8 @@ function getHint() {
   if (!hintPair) {
     return;
   }
+
+  playHint();
 
   const labels = board.querySelectorAll(
     ".game-screen__game-board-container__game-board__item__label",
@@ -318,6 +344,9 @@ function getHint() {
 
 function revert() {
   game.revert();
+
+  playRevert();
+
   rerenderBoard();
   renderAssistButtons();
   updateScore();
@@ -327,6 +356,8 @@ function shuffle() {
   if (game.shuffle()) {
     rerenderBoard();
     renderAssistButtons();
+
+    playShuffle();
 
     checkGameEnd();
   }
@@ -382,7 +413,10 @@ function checkGameEnd() {
   removeSavedGame();
 
   if (result.won) {
+    playWin();
     saveGameResult(result);
+  } else {
+    playLose();
   }
 
   showGameResult(result, {
