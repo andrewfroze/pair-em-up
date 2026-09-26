@@ -373,7 +373,7 @@ function checkGameEnd() {
   showGameResult(result, {
     onPlayAgain: () => restartGame(),
     onMainMenu: onMainMenuGlobal,
-    onResults: () => openScores(),
+    onResults: () => openScores(game.mode),
   });
 
   return true;

@@ -5,6 +5,7 @@ const MODES = ["classic", "random", "chaotic"];
 const MAX_RESULTS = 5;
 
 let scoresModal;
+let activeMode;
 
 function loadResults() {
   const savedResults = localStorage.getItem("topResults");
@@ -140,8 +141,6 @@ function createScoresModal() {
   resultsContainer.className = "scores-modal__top-results";
   modal.append(resultsContainer);
 
-  let activeMode = "classic";
-
   function renderResults() {
     resultsContainer.replaceChildren(createResultList(activeMode));
 
@@ -198,7 +197,8 @@ function createScoresModal() {
   return overlay;
 }
 
-function openScores() {
+function openScores(actMode = "classic") {
+  activeMode = actMode;
   scoresModal = createScoresModal();
   document.body.append(scoresModal);
 }

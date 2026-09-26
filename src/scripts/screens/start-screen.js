@@ -244,7 +244,7 @@ function isGameSaved(gameMod) {
 }
 
 function openScoresModal() {
-  openScores();
+  openScores(activeGameMod);
 }
 
 function getPlayerName() {
