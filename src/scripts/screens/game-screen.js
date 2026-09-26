@@ -107,8 +107,21 @@ function renderHeaderPanel() {
   score.className = "game-screen__game-board-container__stats__score";
   updateScore(score, game.score);
 
+  const resetButton = document.createElement("button");
+  resetButton.className = "game-screen__game-board-container__reset-button";
+  resetButton.textContent = "Reset";
+  resetButton.title = "Reset";
+
+  resetButton.addEventListener("click", () => {
+    game = new Game(game.mode);
+    updateScore();
+    updateTimer();
+    renderAssistButtons();
+    rerenderBoard();
+  });
+
   statisticsPanel.append(score, timer);
-  headerPanel.append(mainMenuButton, statisticsPanel);
+  headerPanel.append(mainMenuButton, resetButton, statisticsPanel);
 
   return headerPanel;
 }

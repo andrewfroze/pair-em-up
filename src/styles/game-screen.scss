@@ -48,6 +48,7 @@
     align-items: center;
     overflow-y: auto;
 
+    &__reset-button,
     &__main-menu-button {
       width: var(--theme-button-font-size);
       height: var(--theme-button-font-size);
@@ -77,6 +78,11 @@
         background: var(--theme-active);
         color: var(--theme-background);
       }
+    }
+
+    &__reset-button {
+      max-width: none;
+      width: fit-content;
     }
 
     &__stats {
