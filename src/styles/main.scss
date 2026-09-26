@@ -13,6 +13,12 @@ body {
   font-family: var(--theme-font);
 }
 
+body.is-resizing *,
+body.is-resizing *::before,
+body.is-resizing *::after {
+  transition: none !important;
+}
+
 button {
   color: var(--theme-text);
   background-color: var(--theme-background);
