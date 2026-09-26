@@ -125,7 +125,15 @@ function createStartScreen({ onNewGame, onContinue }) {
     gameModIndicator.style.transform = `translateX(${activeGameModLabel.offsetLeft}px)`;
   }
 
-  startScreenContainer.afterRenderAnimation = updateGameModIndicator;
+  startScreenContainer.afterRenderAnimation = () => {
+    updateGameModIndicator();
+
+    requestAnimationFrame(() => {
+      gameModIndicator.classList.add(
+        "start-screen__game-menu__game-mods__indicator--ready",
+      );
+    });
+  };
 
   const startGameButtonsContainer = document.createElement("section");
   startGameButtonsContainer.className = "start-screen__game-menu__start-game";
